@@ -12,9 +12,7 @@ const props = defineProps<{
 
 <template>
   <h2>Pliki użytkownika</h2>
-  <div v-if="files && files.length" class="grid-container">
     <UserFileCard v-for="(file, index) in files" :key="index" :file="file" />
-  </div>
-  <p v-else>Brak plików.</p>
+  <p v-if="files.length === 0">Brak plików.</p>
 </template>
 

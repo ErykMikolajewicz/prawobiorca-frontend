@@ -3,19 +3,15 @@ import CaseCard from '@/components/molecules/CaseCard.vue';
 
 const props = defineProps<{
   cases: Array<{
-    id: string | number;
+    id: string;
     name: string;
   }>;
 }>();
 </script>
 
 <template>
-  <div>
-    <h2>Moje sprawy</h2>
-    <div v-if="cases && cases.length" class="grid-container">
-      <CaseCard v-for="(userCase, index) in cases" :key="userCase.id" :userCase="userCase" :index="index + 1" />
-    </div>
-    <p v-else>Brak spraw.</p>
-  </div>
+  <h2>Moje sprawy</h2>
+  <CaseCard v-for="(userCase, index) in cases" :key="userCase.id" :userCase="userCase" :index="index + 1" />
+  <p v-if="cases.length===0">Brak spraw.</p>
 </template>
 

@@ -12,8 +12,6 @@ const props = defineProps<{
 
 <template>
   <h2>Pliki publiczne</h2>
-  <div v-if="files && files.length" class="grid-container">
-    <PublicFileCard v-for="(file, index) in files" :key="index" :file="file" />
-  </div>
-  <p v-else>Brak plików.</p>
+  <PublicFileCard v-for="(file, index) in files" :key="index" :file="file" />
+  <p v-if="files.length === 0">Brak plików.</p>
 </template>

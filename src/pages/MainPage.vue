@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
+
 import AppNavbar from '@/components/organisms/AppNavbar.vue';
 import AppFooter from '@/components/organisms/AppFooter.vue';
 import PublicFilesList from '@/components/organisms/PublicFilesList.vue';
@@ -8,51 +10,45 @@ import UserCasesList from '@/components/organisms/UserCasesList.vue';
 import AddFileForm from '@/components/organisms/AddFileForm.vue';
 import NewCaseForm from '@/components/organisms/NewCaseForm.vue';
 
-const isUserLogged = ref(true);
 
-const publicFiles = ref([
-  { presentation_name: 'File 1', file_hash_str: 'hash1', is_prepared: true },
-  { presentation_name: 'File 2', file_hash_str: 'hash2', is_prepared: false }
-]);
+import { useAuthStore } from '@/stores/auth';
 
-const userFiles = ref([
-  { presentation_name: 'User File 1', file_hash_str: 'uhash1', is_prepared: true },
-  { presentation_name: 'User File 2', file_hash_str: 'uhash2', is_prepared: false }
-]);
+const authStore = useAuthStore();
+const { isUserLogged } = storeToRefs(authStore);
 
-const cases = ref([
-  { id: '1', name: 'Podanie o akademik' },
-  { id: '2', name: 'Zwolnienie z wfu' }]);
+const publicFiles = ref([]);
+
+const userFiles = ref([]);
+
+const cases = ref([]);
 </script>
 
 <template>
-  <div class="main-page">
-    <AppNavbar />
+  <AppNavbar />
 
-    <main class="content-container">
+  <main>
 
-      <PublicFilesList :files="publicFiles" />
+    <PublicFilesList :files="publicFiles" />
+
+    <el-divider />
+
+    <template v-if="isUserLogged">
+      <UserFilesList :files="userFiles" />
 
       <el-divider />
 
-      <template v-if="isUserLogged">
-        <UserFilesList :files="userFiles" />
+      <AddFileForm />
 
-        <el-divider />
+      <el-divider />
 
-        <AddFileForm />
+      <UserCasesList :cases="cases" />
 
-        <el-divider />
+      <el-divider />
 
-        <UserCasesList :cases="cases" />
+      <NewCaseForm />
+    </template>
+  </main>
 
-        <el-divider />
-
-        <NewCaseForm />
-      </template>
-    </main>
-
-    <AppFooter />
-  </div>
+  <AppFooter />
 </template>
 
