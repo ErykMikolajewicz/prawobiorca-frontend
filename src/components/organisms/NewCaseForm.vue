@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from 'vue'
 
-const caseName = ref('');
+const caseName = ref('')
 
 const submitCase = () => {
-};
+}
 </script>
 
 <template>
@@ -16,6 +16,6 @@ const submitCase = () => {
         name="case_name"
         required
       />
-    <el-button type="primary" native-type="submit">Utwórz sprawę</el-button>
+    <el-button>Utwórz sprawę</el-button>
   </form>
 </template>

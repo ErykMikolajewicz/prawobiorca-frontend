@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import LoginForm from '@/components/organisms/LoginForm.vue'
+</script>
+
 <template>
     <h2>Logowanie</h2>
 
@@ -11,10 +15,3 @@
       </router-link>
     </p>
 </template>
-
-<script setup lang="ts">
-import LoginForm from '@/components/organisms/LoginForm.vue';
-</script>
-
-<style scoped>
-</style>

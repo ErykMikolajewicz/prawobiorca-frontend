@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AuthControls from '@/components/molecules/AuthControls.vue';
+import AuthControls from '@/components/molecules/AuthControls.vue'
 </script>
 
 <template>

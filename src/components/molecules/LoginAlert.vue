@@ -1,20 +1,16 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 
-const props = defineProps({
-  message: {
-    type: String,
-    default: ''
-  },
-  type: {
-    type: String,
-    default: 'info'
-  }
-});
+type Props = {
+  message: string;
+  type: 'info' | 'error';
+}
+
+const props = defineProps<Props>()
 
 const title = computed(() => {
-  return props.type === 'error' ? 'Błąd' : 'Info';
-});
+  return props.type === 'info' ? 'Info': 'Błąd'
+})
 </script>
 
 <template>
@@ -25,6 +21,5 @@ const title = computed(() => {
     :description="message"
     :show-icon="true"
     :closable="false"
-    class="molecule-alert"
   />
 </template>

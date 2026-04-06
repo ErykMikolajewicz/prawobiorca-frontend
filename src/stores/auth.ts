@@ -1,22 +1,22 @@
-import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
-import * as authApi from '@/api/auth';
+import * as authApi from '@/api/auth'
 
 export const useAuthStore = defineStore('auth', () => {
-  const isUserLogged = ref(false);
+  const isUserLogged = ref(false)
 
   async function logout() {
     try {
-      await authApi.logout();
+      await authApi.logout()
     } finally {
-      isUserLogged.value = false;
+      isUserLogged.value = false
     }
   }
 
   const login = async () => {
-    isUserLogged.value = true;
-  };
+    isUserLogged.value = true
+  }
 
-  return { isUserLogged, logout, login };
-});
+  return { isUserLogged, logout, login }
+})

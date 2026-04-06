@@ -1,25 +1,27 @@
 <script setup lang="ts">
 
-const props = defineProps<{
+type Props = {
   file: {
     presentation_name: string;
     file_hash_str: string;
     is_prepared: boolean;
   }
-}>();
+}
+
+defineProps<Props>()
 </script>
 
 <template>
-  <el-card shadow="hover" body-class="card-body">
-    <span class="text-truncate" :title="file.presentation_name">{{ file.presentation_name }}</span>
+  <el-card>
+    <span :title="file.presentation_name">{{ file.presentation_name }}</span>
     <form v-if="file.is_prepared" action="/search/user/file" method="get">
       <input type="hidden" name="fileHashStr" :value="file.file_hash_str" />
       <input type="hidden" name="filename" :value="file.presentation_name" />
-      <el-button type="primary" size="small" native-type="submit">Przeszukaj</el-button>
+      <el-button>Przeszukaj</el-button>
     </form>
     <form v-else :action="`/user/files/${file.presentation_name}/preparation`" method="post">
       <input type="hidden" name="fileHashStr" :value="file.file_hash_str" />
-      <el-button type="primary" size="small" native-type="submit">Przygotuj plik</el-button>
+      <el-button>Przygotuj plik</el-button>
     </form>
   </el-card>
 </template>

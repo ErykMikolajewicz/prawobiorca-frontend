@@ -1,23 +1,22 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
-const router = useRouter();
-const authStore = useAuthStore();
+const router = useRouter()
+const authStore = useAuthStore()
 
 const handleLogin = () => {
-  router.push('/auth/login');
-};
+  router.push('/auth/login')
+}
 
 const handleLogout = async () => {
-  await authStore.logout();
-};
+  await authStore.logout()
+}
 </script>
 
 <template>
   <el-button
     v-if="authStore.isUserLogged"
-    type="primary"
     @click="handleLogout"
   >
     Wyloguj się
@@ -25,7 +24,6 @@ const handleLogout = async () => {
 
   <el-button
     v-else
-    type="primary"
     @click="handleLogin"
   >
     Zaloguj się

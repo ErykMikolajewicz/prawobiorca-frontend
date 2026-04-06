@@ -1,26 +1,26 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { storeToRefs } from 'pinia';
+import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
 
-import AppNavbar from '@/components/organisms/AppNavbar.vue';
-import AppFooter from '@/components/organisms/AppFooter.vue';
-import PublicFilesList from '@/components/organisms/PublicFilesList.vue';
-import UserFilesList from '@/components/organisms/UserFilesList.vue';
-import UserCasesList from '@/components/organisms/UserCasesList.vue';
-import AddFileForm from '@/components/organisms/AddFileForm.vue';
-import NewCaseForm from '@/components/organisms/NewCaseForm.vue';
+import AppNavbar from '@/components/organisms/AppNavbar.vue'
+import AppFooter from '@/components/organisms/AppFooter.vue'
+import PublicFilesList from '@/components/organisms/PublicFilesList.vue'
+import UserFilesList from '@/components/organisms/UserFilesList.vue'
+import UserCasesList from '@/components/organisms/UserCasesList.vue'
+import AddFileForm from '@/components/organisms/AddFileForm.vue'
+import NewCaseForm from '@/components/organisms/NewCaseForm.vue'
 
 
-import { useAuthStore } from '@/stores/auth';
+import { useAuthStore } from '@/stores/auth'
 
-const authStore = useAuthStore();
-const { isUserLogged } = storeToRefs(authStore);
+const authStore = useAuthStore()
+const { isUserLogged } = storeToRefs(authStore)
 
-const publicFiles = ref([]);
+const publicFiles = ref([])
 
-const userFiles = ref([]);
+const userFiles = ref([])
 
-const cases = ref([]);
+const cases = ref([])
 </script>
 
 <template>

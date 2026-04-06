@@ -1,20 +1,22 @@
 <script setup lang="ts">
 
-const props = defineProps<{
+type Props = {
   userCase: {
     id: string;
     name: string;
   };
   index: number;
-}>();
+}
+
+defineProps<Props>()
 </script>
 
 <template>
   <el-card>
     <el-tag type="info">{{ index }}</el-tag>
-    <span class="text-truncate fw-bold" :title="userCase.name">{{ userCase.name }}</span>
-    <el-button type="primary" size="small" tag="a" :href="`/user/cases/${userCase.id}`">Przejdź</el-button>
+    <span :title="userCase.name">{{ userCase.name }}</span>
+    <el-button :href="`/user/cases/${userCase.id}`">Przejdź</el-button>
     <input type="hidden" name="caseId" :value="userCase.id" />
-    <el-button type="danger" size="small">Usuń</el-button>
+    <el-button>Usuń</el-button>
   </el-card>
 </template>
