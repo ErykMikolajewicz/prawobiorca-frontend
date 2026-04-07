@@ -6,6 +6,14 @@ import * as authApi from '@/api/auth'
 export const useAuthStore = defineStore('auth', () => {
   const isUserLogged = ref(false)
 
+  async function checkIsLogged(): Promise<void> {
+    isUserLogged.value = await authApi.isLogged()
+  }
+
+   async function login(): Promise<void> {
+    isUserLogged.value = true
+  }
+
   async function logout() {
     try {
       await authApi.logout()
@@ -14,9 +22,5 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  const login = async () => {
-    isUserLogged.value = true
-  }
-
-  return { isUserLogged, logout, login }
+  return { isUserLogged, checkIsLogged, login, logout}
 })
