@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import PublicFileCard from '@/components/molecules/PublicFileCard.vue'
+import type {fileRepresentation} from '@/types/api/files.ts'
 
 type Props = {
-  files: Array<{
-    presentation_name: string;
-    file_hash_str: string;
-    is_prepared: boolean;
-  }>
+  files: Array<fileRepresentation>
 }
 
 defineProps<Props>()
@@ -14,6 +11,6 @@ defineProps<Props>()
 
 <template>
   <h2>Pliki publiczne</h2>
-  <PublicFileCard v-for="(file, index) in files" :key="index" :file="file" />
+  <PublicFileCard v-for="file in files" :key="file.file_hash_str" :file="file" />
   <p v-if="!files.length">Brak plików.</p>
 </template>

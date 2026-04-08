@@ -1,11 +1,8 @@
 <script setup lang="ts">
+import type {fileRepresentation} from '@/types/api/files.ts'
 
 type Props = {
-  file: {
-    presentation_name: string;
-    file_hash_str: string;
-    is_prepared: boolean;
-  }
+  file: fileRepresentation
 }
 
 defineProps<Props>()

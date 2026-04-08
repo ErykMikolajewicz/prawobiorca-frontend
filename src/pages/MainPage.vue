@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import AppNavbar from '@/components/organisms/AppNavbar.vue'
@@ -9,6 +9,8 @@ import UserFilesList from '@/components/organisms/UserFilesList.vue'
 import UserCasesList from '@/components/organisms/UserCasesList.vue'
 import AddFileForm from '@/components/organisms/AddFileForm.vue'
 import NewCaseForm from '@/components/organisms/NewCaseForm.vue'
+import {getPublicFiles} from "@/api/files.ts"
+import type {fileRepresentation} from '@/types/api/files.ts'
 
 
 import { useAuthStore } from '@/stores/auth'
@@ -16,11 +18,15 @@ import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
 const { isUserLogged } = storeToRefs(authStore)
 
-const publicFiles = ref([])
+const publicFiles = ref<Array<fileRepresentation>>([])
 
-const userFiles = ref([])
+const userFiles = ref<Array<fileRepresentation>>([])
 
 const cases = ref([])
+
+onMounted(async () => {
+  publicFiles.value = await getPublicFiles()
+})
 </script>
 
 <template>
