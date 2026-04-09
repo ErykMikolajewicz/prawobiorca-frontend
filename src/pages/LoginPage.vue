@@ -9,7 +9,7 @@ import LoginForm from '@/components/organisms/LoginForm.vue'
 
     <p>
       <router-link to="/accounts/register" custom v-slot="{ navigate, href }">
-        <el-link :href="href" @click="navigate" type="primary">
+        <el-link :href="href" @click="navigate">
           Załóż konto
         </el-link>
       </router-link>

@@ -5,12 +5,13 @@ import { useAuthStore } from '@/stores/auth'
 const router = useRouter()
 const authStore = useAuthStore()
 
-const handleLogin = () => {
-  router.push('/auth/login')
+async function handleLogin() {
+  await router.push('/auth/login')
 }
 
-const handleLogout = async () => {
+async function handleLogout() {
   await authStore.logout()
+  await router.push('/')
 }
 </script>
 

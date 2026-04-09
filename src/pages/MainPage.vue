@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onBeforeMount } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import AppNavbar from '@/components/organisms/AppNavbar.vue'
@@ -24,8 +24,11 @@ const userFiles = ref<Array<fileRepresentation>>([])
 
 const cases = ref([])
 
-onMounted(async () => {
+onBeforeMount(async () => {
   publicFiles.value = await getPublicFiles()
+  if (isUserLogged){
+
+  }
 })
 </script>
 

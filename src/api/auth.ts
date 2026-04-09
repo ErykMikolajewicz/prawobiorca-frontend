@@ -5,8 +5,11 @@ export async function logout(): Promise<void> {
   await prawobiorcaClient.post('/auth/logout')
 }
 
-export async function login(): Promise<void> {
-  await prawobiorcaClient.post('/auth/login')
+export async function login(username: string, password: string): Promise<void> {
+  await prawobiorcaClient.post('/auth/login', {
+    username,
+    password
+  })
 }
 
 export async function isLogged(): Promise<boolean> {

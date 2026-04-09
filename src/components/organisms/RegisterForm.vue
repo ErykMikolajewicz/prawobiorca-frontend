@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
+import { register } from '@/api/accounts'
+import { ElMessage } from 'element-plus'
 
 const router = useRouter()
-const authStore = useAuthStore()
 
 const form = reactive({
   username: '',
@@ -24,12 +24,16 @@ const onSubmit = async () => {
   errorMessage.value = ''
 
   try {
+    await register(form.username, form.password)
 
-    await authStore.login(form.username, form.password)
+    ElMessage({
+      message: 'Rejestracja przebiegła pomyślnie. Możesz się teraz zalogować.',
+      type: 'success',
+    })
 
-    await router.push('/')
+    await router.push('/auth/login')
   } catch {
-    errorMessage.value = 'Nieprawidłowa nazwa użytkownika lub hasło.'
+    errorMessage.value = 'Wystąpił błąd podczas rejestracji. Spróbuj ponownie.'
   } finally {
     isLoading.value = false
   }
@@ -42,6 +46,14 @@ const onSubmit = async () => {
     @keyup.enter="onSubmit"
     label-position="top"
   >
+    <el-alert
+      v-if="errorMessage"
+      :title="errorMessage"
+      type="error"
+      show-icon
+      class="mb-3"
+      :closable="false"
+    />
 
     <el-form-item label="Nazwa użytkownika:" prop="username">
       <el-input
@@ -67,7 +79,7 @@ const onSubmit = async () => {
         :loading="isLoading"
         @click="onSubmit"
       >
-        Zaloguj
+        Zarejestruj
       </el-button>
     </el-form-item>
   </el-form>

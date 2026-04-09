@@ -10,8 +10,9 @@ export const useAuthStore = defineStore('auth', () => {
     isUserLogged.value = await authApi.isLogged()
   }
 
-   async function login(): Promise<void> {
-    isUserLogged.value = true
+   async function login(username: string, password: string): Promise<void> {
+      await authApi.login(username, password)
+      isUserLogged.value = true
   }
 
   async function logout() {
