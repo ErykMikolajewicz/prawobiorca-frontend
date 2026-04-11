@@ -9,3 +9,12 @@ export async function getPublicFiles(): Promise<Array<fileRepresentation>> {
   }
   return response.data
 }
+
+
+export async function getUserFiles(): Promise<Array<fileRepresentation>> {
+  const response = await prawobiorcaClient.get('/user/files')
+  if (response.status == 204) {
+    return []
+  }
+  return response.data
+}

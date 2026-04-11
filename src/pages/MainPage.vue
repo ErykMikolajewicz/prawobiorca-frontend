@@ -9,8 +9,10 @@ import UserFilesList from '@/components/organisms/UserFilesList.vue'
 import UserCasesList from '@/components/organisms/UserCasesList.vue'
 import AddFileForm from '@/components/organisms/AddFileForm.vue'
 import NewCaseForm from '@/components/organisms/NewCaseForm.vue'
-import {getPublicFiles} from "@/api/files.ts"
+import {getPublicFiles, getUserFiles} from "@/api/files.ts"
 import type {fileRepresentation} from '@/types/api/files.ts'
+import {getCases} from "@/api/cases.ts"
+import type {caseData} from '@/types/api/cases.ts'
 
 
 import { useAuthStore } from '@/stores/auth'
@@ -22,12 +24,13 @@ const publicFiles = ref<Array<fileRepresentation>>([])
 
 const userFiles = ref<Array<fileRepresentation>>([])
 
-const cases = ref([])
+const cases = ref<Array<caseData>>([])
 
 onBeforeMount(async () => {
   publicFiles.value = await getPublicFiles()
-  if (isUserLogged){
-
+  if (isUserLogged.value){
+    userFiles.value = await getUserFiles()
+    cases.value = await getCases()
   }
 })
 </script>
