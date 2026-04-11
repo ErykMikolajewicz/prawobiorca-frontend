@@ -11,10 +11,8 @@ defineProps<Props>()
 <template>
   <el-card>
     <span :title="file.presentation_name">{{ file.presentation_name }}</span>
-    <form action="/search/public-file" method="get">
-      <input type="hidden" name="fileHashStr" :value="file.file_hash_str" />
-      <input type="hidden" name="filename" :value="file.presentation_name" />
+    <router-link :to="{ path: '/search/public-file', query: { fileHashStr: file.file_hash_str, filename: file.presentation_name } }">
       <el-button :disabled="!file.is_prepared">Przeszukaj</el-button>
-    </form>
+    </router-link>
   </el-card>
 </template>

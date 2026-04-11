@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import MainPage from '@/pages/MainPage.vue'
 import LoginPage from "@/pages/LoginPage.vue"
 import RegisterPage from "@/pages/RegisterPage.vue"
+import SearchPage from "@/pages/SearchPage.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.PRAWOBIORCA_API_URL),
@@ -10,6 +11,16 @@ const router = createRouter({
       path: '/',
       name: 'MainPage',
       component: MainPage
+    },
+    {
+      path: '/search/public-file',
+      name: 'SearchPublicFile',
+      component: SearchPage
+    },
+    {
+      path: '/search/user/file',
+      name: 'SearchUserFile',
+      component: SearchPage
     },
     {
       path: '/auth/login',
