@@ -3,6 +3,7 @@ import MainPage from '@/pages/MainPage.vue'
 import LoginPage from "@/pages/LoginPage.vue"
 import RegisterPage from "@/pages/RegisterPage.vue"
 import SearchPage from "@/pages/SearchPage.vue"
+import CasePage from "@/pages/CasePage.vue"
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.PRAWOBIORCA_API_URL),
@@ -31,6 +32,11 @@ const router = createRouter({
       path: '/accounts/register',
       name: 'RegisterPage',
       component: RegisterPage
+    },
+    {
+      path: '/case/:id',
+      name: 'CasePage',
+      component: CasePage
     }
   ],
 })
