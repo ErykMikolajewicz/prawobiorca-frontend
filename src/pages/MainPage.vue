@@ -36,31 +36,44 @@ onBeforeMount(async () => {
 </script>
 
 <template>
-  <AppNavbar />
+  <div class="page-container">
+    <AppNavbar />
 
-  <main>
-
-    <PublicFilesList :files="publicFiles" />
-
-    <el-divider />
-
-    <template v-if="isUserLogged">
-      <UserFilesList :files="userFiles" />
+    <main class="main-content">
+      <PublicFilesList :files="publicFiles" />
 
       <el-divider />
 
-      <AddFileForm />
+      <template v-if="isUserLogged">
+        <UserFilesList :files="userFiles" />
 
-      <el-divider />
+        <el-divider />
 
-      <UserCasesList :cases="cases" />
+        <AddFileForm />
 
-      <el-divider />
+        <el-divider />
 
-      <NewCaseForm />
-    </template>
-  </main>
+        <UserCasesList :cases="cases" />
+
+        <el-divider />
+
+        <NewCaseForm />
+      </template>
+    </main>
 
   <AppFooter />
+  </div>
 </template>
+
+<style scoped>
+.page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex-grow: 1;
+}
+</style>
 

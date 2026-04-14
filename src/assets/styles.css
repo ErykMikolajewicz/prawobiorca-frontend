@@ -1,0 +1,29 @@
+:root {
+  --el-color-primary: #8a2be2;
+  --el-color-primary-light-3: #ad66eb;
+  --el-color-primary-light-5: #c491f0;
+  --el-color-primary-light-7: #dbbdf5;
+  --el-color-primary-light-9: #f3eafa;
+  --el-color-primary-dark-2: #6e22b5;
+
+  --el-bg-color: #f5f7fa;
+  --el-bg-color-page: #ebeef5;
+  --el-bg-color-overlay: #ffffff;
+
+  --el-text-color-primary: #303133;
+  --el-text-color-regular: #606266;
+  --el-text-color-secondary: #909399;
+}
+
+
+body {
+  background-color: var(--el-bg-color-page);
+  color: var(--el-text-color-primary);
+  margin: 0;
+  font-family: 'Inter', 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+  min-height: 100vh;
+}
+
+#app {
+  min-height: 100vh;
+}
