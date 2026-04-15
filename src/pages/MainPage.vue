@@ -26,6 +26,10 @@ const userFiles = ref<Array<fileRepresentation>>([])
 
 const cases = ref<Array<caseData>>([])
 
+function handleCaseCreated(newCase: caseData) {
+  cases.value.push(newCase)
+}
+
 onBeforeMount(async () => {
   publicFiles.value = await getPublicFiles()
   if (isUserLogged.value){
@@ -57,7 +61,7 @@ onBeforeMount(async () => {
 
         <el-divider />
 
-        <NewCaseForm />
+        <NewCaseForm @case-created="handleCaseCreated" />
       </template>
     </main>
 

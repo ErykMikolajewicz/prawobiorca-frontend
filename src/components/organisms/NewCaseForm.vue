@@ -1,9 +1,19 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import {addCase} from '@/api/cases'
 
 const caseName = ref('')
 
-const submitCase = () => {
+const emit = defineEmits(['case-created'])
+
+async function submitCase() {
+  const caseId = await addCase(caseName.value)
+  emit('case-created', {
+    id: caseId,
+    name: caseName.value
+  })
+
+  caseName.value = ''
 }
 </script>
 

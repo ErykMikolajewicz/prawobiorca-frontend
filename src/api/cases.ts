@@ -19,6 +19,13 @@ export async function getCaseArticles(caseId: string): Promise<Array<articleData
   return response.data
 }
 
+export async function addCase(caseName: string): Promise<string> {
+  const formData = new FormData()
+  formData.append('caseName', caseName)
+  const response = await prawobiorcaClient.post('/user/cases', formData)
+  return response.data
+}
+
 export async function unpinArticle(caseId: string, articleId: string): Promise<void> {
   await prawobiorcaClient.post('/case/unpin', { article_id: articleId })
 }
