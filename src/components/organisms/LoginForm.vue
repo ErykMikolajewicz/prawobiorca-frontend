@@ -39,14 +39,17 @@ const onSubmit = async () => {
 <template>
   <el-form
     :model="form"
-    @keyup.enter="onSubmit"
     label-position="top"
+    autocomplete="on"
+    @submit.prevent="onSubmit"
   >
 
     <el-form-item label="Nazwa użytkownika:" prop="username">
       <el-input
         v-model="form.username"
         id="username"
+        name="username"
+        autocomplete="username"
         required
       />
     </el-form-item>
@@ -56,6 +59,8 @@ const onSubmit = async () => {
         v-model="form.password"
         type="password"
         id="password"
+        name="password"
+        autocomplete="current-password"
         show-password
         required
       />
@@ -65,7 +70,7 @@ const onSubmit = async () => {
       <el-button
         type="primary"
         :loading="isLoading"
-        @click="onSubmit"
+        native-type="submit"
       >
         Zaloguj
       </el-button>
