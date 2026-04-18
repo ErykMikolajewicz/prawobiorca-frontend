@@ -18,3 +18,13 @@ export async function getUserFiles(): Promise<Array<fileRepresentation>> {
   }
   return response.data
 }
+
+export async function uploadFile(file: File): Promise<void> {
+  const formData = new FormData()
+  formData.append('file', file)
+  await prawobiorcaClient.post('/user/files', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}

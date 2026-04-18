@@ -1,9 +1,29 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { uploadFile } from '@/api/files'
+import { ElMessage } from 'element-plus'
 
-const fileInput = ref<HTMLInputElement | null>(null)
+const fileInputRef = ref<HTMLInputElement | null>(null)
 
-const submitFile = () => {}
+const submitFile = async () => {
+  const fileInput = fileInputRef.value
+  const file = fileInput?.files?.[0]
+
+
+  if (!file) {
+    ElMessage.warning('Wybierz plik do przesłania.')
+    return
+  }
+
+  try {
+    await uploadFile(file)
+    ElMessage.success('Plik został pomyślnie dodany.')
+
+    fileInput.value = ''
+  } catch {
+    ElMessage.error('Wystąpił błąd podczas dodawania pliku.')
+  }
+}
 </script>
 
 <template>
@@ -12,7 +32,7 @@ const submitFile = () => {}
 
     <el-card shadow="never" class="form-card">
       <form class="file-form" method="post" action="/user/files" enctype="multipart/form-data" @submit.prevent="submitFile">
-        <input id="addFile" ref="fileInput" class="custom-file-input" type="file" name="file" />
+        <input id="addFile" ref="fileInputRef" class="custom-file-input" type="file" name="file" />
         <el-button type="primary" native-type="submit">
           Dodaj plik
         </el-button>
