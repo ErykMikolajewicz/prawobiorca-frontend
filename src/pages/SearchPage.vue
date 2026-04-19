@@ -23,12 +23,11 @@ const { isUserLogged } = storeToRefs(authStore)
 
 const filename = ref((route.query.filename as string) || '')
 const fileHashStr = ref((route.query.fileHashStr as string) || '')
-const initialQuery = ref((route.query.query as string) || '')
 
 const cases = ref<Array<caseData>>([])
 const selectedCaseId = ref<string>('')
 const results = ref<Array<string>>([])
-const currentQuery = ref(initialQuery.value)
+const currentQuery = ref('')
 const isSearching = ref(false)
 
 onBeforeMount(async () => {
@@ -36,14 +35,11 @@ onBeforeMount(async () => {
     cases.value = await getCases()
   }
 
-  if (currentQuery.value && fileHashStr.value) {
-    await performSearch(currentQuery.value)
-  }
 })
 
 const handleSearch = async (query: string) => {
   currentQuery.value = query
-  router.replace({
+  await router.replace({
     query: { ...route.query, query }
   })
 
@@ -101,7 +97,7 @@ const handleAddToCase = async (payload: { articleContent: string }) => {
 
     <div v-loading="isSearching">
       <SearchForm
-        :initial-query="currentQuery"
+        :current-query="currentQuery"
         @search="handleSearch"
       />
 

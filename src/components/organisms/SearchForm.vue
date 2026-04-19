@@ -2,14 +2,14 @@
 import { ref } from 'vue'
 
 const props = defineProps<{
-  initialQuery?: string
+  currentQuery: string
 }>()
 
 const emit = defineEmits<{
   (e: 'search', query: string): void
 }>()
 
-const query = ref(props.initialQuery || '')
+const query = ref(props.currentQuery)
 
 const onSubmit = () => {
   if (query.value.trim()) {

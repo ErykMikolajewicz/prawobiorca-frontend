@@ -10,6 +10,6 @@ export async function searchInFile(query: string, fileHashStr: string, filename:
   if (response.status === 204) {
     return []
   }
-  return response.data.results
+  return response.data
 }
 
