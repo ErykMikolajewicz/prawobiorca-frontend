@@ -9,6 +9,10 @@ type Props = {
 }
 
 defineProps<Props>()
+
+const emit = defineEmits<{
+  (e: 'case-deleted', caseId: string): void
+}>()
 </script>
 
 <template>
@@ -21,6 +25,7 @@ defineProps<Props>()
         :key="userCase.id"
         :userCase="userCase"
         :index="index + 1"
+        @deleted="(id) => emit('case-deleted', id)"
       />
     </div>
 

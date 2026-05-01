@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { deleteCase } from '@/api/cases'
+import { ElMessage } from 'element-plus'
 
 type Props = {
   userCase: {
@@ -8,7 +11,27 @@ type Props = {
   index: number;
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+
+const emit = defineEmits<{
+  (e: 'deleted', caseId: string): void
+}>()
+
+const isDeleting = ref(false)
+
+async function handleDelete() {
+  try {
+    isDeleting.value = true
+    await deleteCase(props.userCase.id)
+    ElMessage.success('Sprawa została usunięta')
+    emit('deleted', props.userCase.id)
+  } catch (error) {
+    ElMessage.error('Nie udało się usunąć sprawy')
+    console.error(error)
+  } finally {
+    isDeleting.value = false
+  }
+}
 </script>
 
 <template>
@@ -21,10 +44,16 @@ defineProps<Props>()
         <router-link class="action-link" :to="`/user/cases/${userCase.id}`">
           <el-button type="primary" class="full-width-btn">Przejdź</el-button>
         </router-link>
-        <div class="form-action">
-          <input type="hidden" name="caseId" :value="userCase.id" />
-          <el-button type="danger" class="full-width-btn">Usuń</el-button>
-        </div>
+        <el-popconfirm
+          title="Czy na pewno chcesz usunąć tę sprawę?"
+          confirm-button-text="Tak"
+          cancel-button-text="Nie"
+          @confirm="handleDelete"
+        >
+          <template #reference>
+            <el-button type="danger" :loading="isDeleting" class="full-width-btn">Usuń</el-button>
+          </template>
+        </el-popconfirm>
       </div>
     </div>
   </el-card>

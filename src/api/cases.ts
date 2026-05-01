@@ -1,6 +1,6 @@
 import {prawobiorcaClient} from '@/api/axios'
 import type {caseData} from '@/types/api/cases.ts'
-import type {articleData} from "@/types/api/articles.ts";
+import type {articleData} from "@/types/api/articles.ts"
 
 
 export async function getCases(): Promise<Array<caseData>> {
@@ -24,6 +24,10 @@ export async function addCase(caseName: string): Promise<string> {
   formData.append('caseName', caseName)
   const response = await prawobiorcaClient.post('/user/cases', formData)
   return response.data
+}
+
+export async function deleteCase(caseId: string): Promise<void> {
+  await prawobiorcaClient.delete(`/user/cases/${caseId}`)
 }
 
 export async function unpinArticle(caseId: string, articleId: string): Promise<void> {
