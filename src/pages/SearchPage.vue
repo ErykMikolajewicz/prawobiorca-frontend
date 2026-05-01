@@ -15,6 +15,7 @@ import { getCases } from '@/api/cases'
 import { searchInFile } from '@/api/search'
 import type { caseData } from '@/types/api/cases'
 import {addArticleToCase} from "@/api/articles.ts"
+import type {searchResult} from "@/types/api/search.ts"
 
 const route = useRoute()
 const router = useRouter()
@@ -26,7 +27,7 @@ const fileHashStr = ref((route.query.fileHashStr as string) || '')
 
 const cases = ref<Array<caseData>>([])
 const selectedCaseId = ref<string>('')
-const results = ref<Array<string>>([])
+const results = ref<Array<searchResult>>([])
 const currentQuery = ref('')
 const isSearching = ref(false)
 

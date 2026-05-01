@@ -1,6 +1,7 @@
 import {prawobiorcaClient} from '@/api/axios'
+import type {searchResult} from '@/types/api/search.ts'
 
-export async function searchInFile(query: string, fileHashStr: string, filename: string): Promise<Array<string>> {
+export async function searchInFile(query: string, fileHashStr: string, filename: string): Promise<Array<searchResult>> {
   const response = await prawobiorcaClient.get('/search/public-file', { params: {
     query,
     fileHashStr,

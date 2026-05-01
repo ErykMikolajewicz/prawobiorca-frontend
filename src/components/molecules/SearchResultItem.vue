@@ -21,9 +21,9 @@ const handleAddToCase = () => {
 </script>
 
 <template>
-  <el-card v-if="isUserLogged" shadow="hover">
+  <el-card shadow="hover">
       <label>{{ result }}</label>
-        <el-button
+        <el-button v-if="isUserLogged"
           type="success"
           size="small"
           :disabled="!selectedCaseId"

@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import SearchResultItem from '@/components/molecules/SearchResultItem.vue'
+import type {searchResult} from '@/types/api/search.ts'
 
 defineProps<{
-  results: Array<string>
+  results: Array<searchResult>
   filename: string
   selectedCaseId?: string
   query: string
@@ -24,9 +25,9 @@ const onAddToCase = (payload: { articleContent: string }) => {
     <div v-if="results.length">
       <h2>Wyniki:</h2>
         <SearchResultItem
-          v-for="(result, index) in results"
-          :key="index"
-          :result="result"
+          v-for="{ id, text } in results"
+          :key="id"
+          :result="text"
           :filename="filename"
           :selected-case-id="selectedCaseId"
           @add-to-case="onAddToCase"
