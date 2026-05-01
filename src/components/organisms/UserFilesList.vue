@@ -10,6 +10,10 @@ type Props = {
 }
 
 defineProps<Props>()
+
+const emit = defineEmits<{
+  (e: 'fileDeleted', fileHashStr: string): void
+}>()
 </script>
 
 <template>
@@ -21,6 +25,7 @@ defineProps<Props>()
         v-for="file in files"
         :key="file.file_hash_str"
         :file="file"
+        @deleted="(hash) => emit('fileDeleted', hash)"
       />
     </div>
 

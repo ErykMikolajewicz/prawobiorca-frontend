@@ -30,6 +30,10 @@ function handleCaseCreated(newCase: caseData) {
   cases.value.push(newCase)
 }
 
+function handleFileDeleted(fileHashStr: string) {
+  userFiles.value = userFiles.value.filter(file => file.file_hash_str !== fileHashStr)
+}
+
 onBeforeMount(async () => {
   publicFiles.value = await getPublicFiles()
   if (isUserLogged.value){
@@ -49,7 +53,7 @@ onBeforeMount(async () => {
       <el-divider />
 
       <template v-if="isUserLogged">
-        <UserFilesList :files="userFiles" />
+        <UserFilesList :files="userFiles" @file-deleted="handleFileDeleted" />
 
         <el-divider />
 
