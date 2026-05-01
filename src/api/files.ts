@@ -28,3 +28,8 @@ export async function uploadFile(file: File): Promise<void> {
     }
   })
 }
+
+export async function deleteUserFile(filename: string): Promise<boolean> {
+  const response = await prawobiorcaClient.delete(`/user/files/${filename}`)
+  return response.status === 204
+}
