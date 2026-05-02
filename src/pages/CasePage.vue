@@ -3,6 +3,7 @@ import { ref, onBeforeMount } from 'vue'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'
 
 import AppNavbar from '@/components/organisms/AppNavbar.vue'
 import AppFooter from '@/components/organisms/AppFooter.vue'
@@ -12,8 +13,10 @@ import GeneratePdfForm from '@/components/organisms/GeneratePdfForm.vue'
 import { getCaseArticles, unpinArticle, generatePdf } from '@/api/cases.ts'
 
 import type {articleData} from "@/types/api/articles.ts"
+import {ArrowLeft} from "@element-plus/icons-vue"
 
 const route = useRoute()
+const router = useRouter()
 const caseId = route.params.id as string
 
 const authStore = useAuthStore()
@@ -45,7 +48,9 @@ const handleGeneratePdf = async (description: string) => {
   <AppNavbar />
 
   <main class="case-page">
-    <el-button link @click="$router.push('/')">← Powrót do głównego ekranu</el-button>
+    <el-button link @click="router.push('/')">
+      <el-icon><ArrowLeft /></el-icon> Powrót do głównego ekranu
+    </el-button>
 
     <h1>Szczegóły Sprawy</h1>
 

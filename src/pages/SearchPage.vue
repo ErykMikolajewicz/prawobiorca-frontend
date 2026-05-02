@@ -3,6 +3,7 @@ import { ref, onBeforeMount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { ElMessage } from 'element-plus'
+import { ArrowLeft } from '@element-plus/icons-vue'
 
 import AppNavbar from '@/components/organisms/AppNavbar.vue'
 import AppFooter from '@/components/organisms/AppFooter.vue'
@@ -87,7 +88,7 @@ const handleAddToCase = async (payload: { articleContent: string }) => {
 
     <main class="main-content">
       <el-button link @click="router.push('/')">
-        <el-icon><ArrowLeft /></el-icon> ← Powrót do głównego ekranu
+        <el-icon><ArrowLeft /></el-icon> Powrót do głównego ekranu
       </el-button>
 
       <CaseSelector

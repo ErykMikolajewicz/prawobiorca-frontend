@@ -1,6 +1,6 @@
 {
   "name": "prawobiorca-frontend",
-  "version": "0.17.1",
+  "version": "0.17.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -16,6 +16,7 @@
     "format": "oxfmt src/"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.3.2",
     "axios": "^1.15.2",
     "element-plus": "^2.13.7",
     "pinia": "^3.0.4",
@@ -50,5 +51,6 @@
   },
   "engines": {
     "node": "^24.15.0"
-  }
+  },
+  "packageManager": "pnpm@10.33.2+sha512.a90faf6feeab71ad6c6e57f94e0fe1a12f5dcc22cd754db40ae9593eb6a3e0b6b12e3540218bb37ae083404b1f2ce6db2a4121e979829b4aff94b99f49da1cf8"
 }
