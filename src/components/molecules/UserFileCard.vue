@@ -41,7 +41,13 @@ async function handleDelete() {
         <span class="file-name" :title="file.presentation_name">{{ file.presentation_name }}</span>
       </div>
       <div class="actions">
-        <router-link v-if="file.is_prepared" class="action-link" :to="{ path: '/search/user/file', query: { fileHashStr: file.file_hash_str, filename: file.presentation_name } }">
+        <router-link v-if="file.is_prepared" class="action-link" :to="
+          {
+          name: 'SearchUserFile',
+          params: { fileHashStr: file.file_hash_str },
+          state: { filename: file.presentation_name }
+          }"
+        >
           <el-button type="primary" class="full-width-btn">Przeszukaj</el-button>
         </router-link>
         <form v-else class="action-link form-action" :action="`/user/files/${file.presentation_name}/preparation`" method="post">

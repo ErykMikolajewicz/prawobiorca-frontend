@@ -16,20 +16,22 @@ import { getCases } from '@/api/cases'
 import { searchInFile } from '@/api/search'
 import type { caseData } from '@/types/api/cases'
 import {addArticleToCase} from "@/api/articles.ts"
-import type {searchResult} from "@/types/api/search.ts"
+import type {searchResult, SearchParams} from "@/types/api/search.ts"
 
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
 const { isUserLogged } = storeToRefs(authStore)
 
-const filename = ref((route.query.filename as string) || '')
-const fileHashStr = ref((route.query.fileHashStr as string) || '')
+const fileHashStr = ref((route.params.fileHashStr as string) || '')
+const filename = history.state.filename
+const searchParams = ref<SearchParams>({query: (route.query.query as string) || '',
+  threshold: route.query.threshold !== undefined ? Number(route.query.threshold) : 0.7,
+  limit: route.query.limit ? Number(route.query.limit) : undefined})
 
 const cases = ref<Array<caseData>>([])
 const selectedCaseId = ref<string>('')
 const results = ref<Array<searchResult>>([])
-const currentQuery = ref('')
 const isSearching = ref(false)
 
 onBeforeMount(async () => {
@@ -39,25 +41,21 @@ onBeforeMount(async () => {
 
 })
 
-const handleSearch = async (query: string) => {
-  currentQuery.value = query
+const handleSearch = async (newSearchParams: SearchParams) => {
+  searchParams.value = newSearchParams
+
   await router.replace({
-    query: { ...route.query, query }
+    query: newSearchParams
   })
 
-  await performSearch(query)
+  await performSearch(newSearchParams)
 }
 
-const performSearch = async (query: string) => {
-  if (!fileHashStr.value) {
-    ElMessage.error('Brak identyfikatora pliku.')
-    return
-  }
+async function performSearch(searchParams: SearchParams) {
 
   isSearching.value = true
   try {
-    const fetchedResults = await searchInFile(query, fileHashStr.value, filename.value)
-    results.value = fetchedResults
+    results.value =  await searchInFile(searchParams, fileHashStr.value)
   } catch (error) {
     ElMessage.error('Wystąpił błąd podczas przeszukiwania pliku.')
     console.error(error)
@@ -66,7 +64,7 @@ const performSearch = async (query: string) => {
   }
 }
 
-const handleAddToCase = async (payload: { articleContent: string }) => {
+async function handleAddToCase(payload: { articleContent: string }){
   if (!selectedCaseId.value) {
     ElMessage.warning('Wybierz sprawę z listy.')
     return
@@ -100,7 +98,7 @@ const handleAddToCase = async (payload: { articleContent: string }) => {
 
       <div v-loading="isSearching">
         <SearchForm
-          :current-query="currentQuery"
+          :search-params="searchParams"
           @search="handleSearch"
         />
 
@@ -108,7 +106,7 @@ const handleAddToCase = async (payload: { articleContent: string }) => {
           :results="results"
           :filename="filename"
           :selected-case-id="selectedCaseId"
-          :query="currentQuery"
+          :query="searchParams.query"
           @add-to-case="handleAddToCase"
         />
       </div>

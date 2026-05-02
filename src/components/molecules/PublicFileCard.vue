@@ -14,7 +14,13 @@ defineProps<Props>()
       <div class="file-info">
         <span class="file-name" :title="file.presentation_name">{{ file.presentation_name }}</span>
       </div>
-      <router-link class="action-link" :to="{ path: '/search/public-file', query: { fileHashStr: file.file_hash_str, filename: file.presentation_name } }">
+      <router-link class="action-link" :to="
+        {
+          name: 'SearchPublicFile',
+          params: { fileHashStr: file.file_hash_str },
+          state: { filename: file.presentation_name }
+        }"
+      >
         <el-button type="primary" :disabled="!file.is_prepared">Przeszukaj</el-button>
       </router-link>
     </div>
@@ -28,7 +34,6 @@ defineProps<Props>()
 
 .file-card:hover {
   transform: translateY(-2px);
-  /* Delikatny fioletowy cień z Twojej palety przy hover */
   box-shadow: 0 4px 12px rgba(138, 43, 226, 0.12);
 }
 
@@ -41,7 +46,7 @@ defineProps<Props>()
 
 .file-info {
   flex: 1;
-  min-width: 0; /* Niezbędne, aby ucinanie działało wewnątrz kontenera flex */
+  min-width: 0;
 }
 
 .file-name {
