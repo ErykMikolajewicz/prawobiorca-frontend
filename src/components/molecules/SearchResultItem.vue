@@ -22,14 +22,35 @@ const handleAddToCase = () => {
 
 <template>
   <el-card shadow="hover">
-      <label>{{ result }}</label>
+    <div class="result-container">
+      <label class="result-text">{{ result }}</label>
+      <div class="actions">
         <el-button v-if="isUserLogged"
-          type="success"
+          type="primary"
           size="small"
           :disabled="!selectedCaseId"
           @click="handleAddToCase"
         >
           Dodaj do sprawy
         </el-button>
+      </div>
+    </div>
   </el-card>
 </template>
+
+<style scoped>
+.result-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.result-text {
+  flex: 1;
+}
+
+.actions {
+  flex-shrink: 0;
+}
+</style>
