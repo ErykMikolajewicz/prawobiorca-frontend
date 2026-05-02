@@ -25,14 +25,23 @@ const handleAddToCase = () => {
     <div class="result-container">
       <label class="result-text">{{ result }}</label>
       <div class="actions">
-        <el-button v-if="isUserLogged"
-          type="primary"
-          size="small"
-          :disabled="!selectedCaseId"
-          @click="handleAddToCase"
+        <el-tooltip
+          v-if="isUserLogged"
+          :disabled="!!selectedCaseId"
+          content="Wybierz bieżącą sprawę, by dodać do niej wyszukany element."
+          placement="top"
         >
-          Dodaj do sprawy
-        </el-button>
+          <span class="tooltip-wrapper">
+            <el-button
+              type="primary"
+              size="small"
+              :disabled="!selectedCaseId"
+              @click="handleAddToCase"
+            >
+              Dodaj do sprawy
+            </el-button>
+          </span>
+        </el-tooltip>
       </div>
     </div>
   </el-card>
@@ -53,4 +62,10 @@ const handleAddToCase = () => {
 .actions {
   flex-shrink: 0;
 }
+
+.tooltip-wrapper {
+  display: inline-block;
+  cursor: not-allowed;
+}
+
 </style>
