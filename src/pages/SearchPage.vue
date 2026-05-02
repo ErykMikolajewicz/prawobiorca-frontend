@@ -82,35 +82,49 @@ const handleAddToCase = async (payload: { articleContent: string }) => {
 </script>
 
 <template>
-  <AppNavbar />
+  <div class="page-container">
+    <AppNavbar />
 
-  <main>
-    <el-button link @click="router.push('/')">
-      <el-icon><ArrowLeft /></el-icon> ← Powrót do głównego ekranu
-    </el-button>
+    <main class="main-content">
+      <el-button link @click="router.push('/')">
+        <el-icon><ArrowLeft /></el-icon> ← Powrót do głównego ekranu
+      </el-button>
 
-    <CaseSelector
-      :cases="cases"
-      v-model:selectedCaseId="selectedCaseId"
-    />
+      <CaseSelector
+        :cases="cases"
+        v-model:selectedCaseId="selectedCaseId"
+      />
 
     <h1>Przeszukaj plik: {{ filename }}</h1>
 
-    <div v-loading="isSearching">
-      <SearchForm
-        :current-query="currentQuery"
-        @search="handleSearch"
-      />
+      <div v-loading="isSearching">
+        <SearchForm
+          :current-query="currentQuery"
+          @search="handleSearch"
+        />
 
-      <SearchResultsList
-        :results="results"
-        :filename="filename"
-        :selected-case-id="selectedCaseId"
-        :query="currentQuery"
-        @add-to-case="handleAddToCase"
-      />
-    </div>
-  </main>
+        <SearchResultsList
+          :results="results"
+          :filename="filename"
+          :selected-case-id="selectedCaseId"
+          :query="currentQuery"
+          @add-to-case="handleAddToCase"
+        />
+      </div>
+    </main>
 
   <AppFooter />
+  </div>
 </template>
+
+<style scoped>
+.page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex-grow: 1;
+}
+</style>
