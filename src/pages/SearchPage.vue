@@ -104,7 +104,6 @@ async function handleAddToCase(payload: { articleContent: string }){
 
         <SearchResultsList
           :results="results"
-          :filename="filename"
           :selected-case-id="selectedCaseId"
           :query="searchParams.query"
           @add-to-case="handleAddToCase"

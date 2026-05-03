@@ -4,7 +4,7 @@ import { useAuthStore } from '@/stores/auth'
 
 const props = defineProps<{
   result: string
-  filename: string
+  score: number
   selectedCaseId?: string
 }>()
 
@@ -24,6 +24,10 @@ const handleAddToCase = () => {
   <el-card shadow="hover">
     <div class="result-container">
       <label class="result-text">{{ result }}</label>
+      <div class="score-column">
+        <span class="score-label">Podobieństwo</span>
+        <span class="score-value">{{ score.toFixed(3) }}</span>
+      </div>
       <div class="actions">
         <el-tooltip
           v-if="isUserLogged"
@@ -57,6 +61,29 @@ const handleAddToCase = () => {
 
 .result-text {
   flex: 1;
+}
+
+.score-column {
+  flex-shrink: 0;
+  min-width: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--el-text-color-secondary, #909399);
+}
+
+.score-label {
+  font-size: 0.75em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.score-value {
+  font-size: 1.1em;
+  font-weight: 500;
+  color: var(--el-text-color-primary, #303133);
 }
 
 .actions {

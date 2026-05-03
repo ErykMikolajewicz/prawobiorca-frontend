@@ -4,7 +4,6 @@ import type {searchResult} from '@/types/api/search.ts'
 
 defineProps<{
   results: Array<searchResult>
-  filename: string
   selectedCaseId?: string
   query: string
 }>()
@@ -25,10 +24,10 @@ const onAddToCase = (payload: { articleContent: string }) => {
     <div v-if="results.length">
       <h2>Wyniki:</h2>
         <SearchResultItem
-          v-for="{ id, text } in results"
+          v-for="{ id, text, score } in results"
           :key="id"
           :result="text"
-          :filename="filename"
+          :score="score"
           :selected-case-id="selectedCaseId"
           @add-to-case="onAddToCase"
         />

@@ -1,4 +1,5 @@
 export type searchResult = {id: string,
+  score: number
   text: string}
 
 export type SearchParams = {
