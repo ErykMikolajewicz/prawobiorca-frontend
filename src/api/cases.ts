@@ -12,7 +12,7 @@ export async function getCases(): Promise<Array<caseData>> {
 }
 
 export async function getCaseArticles(caseId: string): Promise<Array<articleData>> {
-  const response = await prawobiorcaClient.get(`/case/${caseId}/articles`)
+  const response = await prawobiorcaClient.get(`/user/cases/${caseId}/articles`)
   if (response.status == 204) {
     return []
   }

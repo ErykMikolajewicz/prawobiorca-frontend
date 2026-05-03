@@ -34,7 +34,7 @@ const router = createRouter({
       component: RegisterPage
     },
     {
-      path: '/case/:id',
+      path: '/user/cases/:id',
       name: 'CasePage',
       component: CasePage
     }

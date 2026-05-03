@@ -1,1 +1,3 @@
-export type articleData = {text: string}
+export type articleData = {id: string,
+  content: string,
+  presentationName: string}

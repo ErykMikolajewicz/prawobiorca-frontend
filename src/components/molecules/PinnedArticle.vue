@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import type {articleData} from "@/types/api/articles.ts";
+import type {articleData} from "@/types/api/articles.ts"
 
 type Props = {article: articleData}
 const props = defineProps<Props>()
@@ -18,7 +18,7 @@ const handleUnpin = () => {
   <el-card shadow="hover">
     <template #header>
         <strong>Źródło:</strong>
-        <em>{{ article.document_name }}</em>
+        <em>{{ article.presentationName }}</em>
         <el-button type="danger" @click="handleUnpin">Odepnij</el-button>
     </template>
     <p>{{ article.content }}</p>

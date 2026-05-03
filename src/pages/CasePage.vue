@@ -45,30 +45,44 @@ const handleGeneratePdf = async (description: string) => {
 </script>
 
 <template>
-  <AppNavbar />
+  <div class="page-container">
+    <AppNavbar />
 
-  <main class="case-page">
-    <el-button link @click="router.push('/')">
-      <el-icon><ArrowLeft /></el-icon> Powrót do głównego ekranu
-    </el-button>
+    <main class="case-page">
+      <el-button link @click="router.push('/')">
+        <el-icon><ArrowLeft /></el-icon> Powrót do głównego ekranu
+      </el-button>
 
     <h1>Szczegóły Sprawy</h1>
 
-    <el-row :gutter="20">
-      <el-col :span="12">
-        <section>
-          <h2>Przypięte Artykuły</h2>
-          <PinnedArticlesList :articles="articles" @unpin="handleUnpin" />
-        </section>
-      </el-col>
-      <el-col :span="12">
-        <section>
-          <h2>Kontekst / Opis Wniosku</h2>
-          <GeneratePdfForm :caseId="caseId" @generate-pdf="handleGeneratePdf" />
-        </section>
-      </el-col>
-    </el-row>
-  </main>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <section>
+            <h2>Przypięte Artykuły</h2>
+            <PinnedArticlesList :articles="articles" @unpin="handleUnpin" />
+          </section>
+        </el-col>
+        <el-col :span="12">
+          <section>
+            <h2>Kontekst / Opis Wniosku</h2>
+            <GeneratePdfForm :caseId="caseId" @generate-pdf="handleGeneratePdf" />
+          </section>
+        </el-col>
+      </el-row>
+    </main>
 
   <AppFooter />
+  </div>
 </template>
+
+<style scoped>
+.page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.case-page {
+  flex-grow: 1;
+}
+</style>
