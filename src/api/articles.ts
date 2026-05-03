@@ -1,10 +1,9 @@
 import {prawobiorcaClient} from "@/api/axios.ts"
 
-export async function addArticleToCase(caseId: string, documentName: string, articleContent: string) {
-  const response = await prawobiorcaClient.post('/user/cases/articles', {
-    case_id: caseId,
-    document_name: documentName,
-    article_content: articleContent
+export async function addArticleToCase(caseId: string, presentationName: string, content: string) {
+  const response = await prawobiorcaClient.post(`/user/cases/${caseId}/articles`, {
+    presentationName: presentationName,
+    content: content
   })
   return response.data
 }

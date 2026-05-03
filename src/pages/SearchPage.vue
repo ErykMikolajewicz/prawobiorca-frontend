@@ -71,7 +71,7 @@ async function handleAddToCase(payload: { articleContent: string }){
   }
 
   try {
-    await addArticleToCase(selectedCaseId.value, filename.value, payload.articleContent)
+    await addArticleToCase(selectedCaseId.value, filename, payload.articleContent)
     ElMessage.success('Dodano do sprawy.')
   } catch (error) {
     ElMessage.error('Wystąpił błąd podczas dodawania do sprawy.')
