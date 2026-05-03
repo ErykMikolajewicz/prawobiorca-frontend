@@ -35,7 +35,7 @@ onBeforeMount(async () => {
 })
 
 const handleUnpin = async (articleId: string) => {
-  await unpinArticle(caseId, articleId)
+  await unpinArticle(articleId)
   await loadArticles()
 }
 

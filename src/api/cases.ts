@@ -30,8 +30,8 @@ export async function deleteCase(caseId: string): Promise<void> {
   await prawobiorcaClient.delete(`/user/cases/${caseId}`)
 }
 
-export async function unpinArticle(caseId: string, articleId: string): Promise<void> {
-  await prawobiorcaClient.post('/case/unpin', { article_id: articleId })
+export async function unpinArticle(articleId: string): Promise<void> {
+  await prawobiorcaClient.delete(`/user/cases/articles/${articleId}`)
 }
 
 export async function generatePdf(caseId: string, description: string): Promise<void> {
