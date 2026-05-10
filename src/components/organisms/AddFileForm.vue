@@ -67,10 +67,12 @@ const submitFile = async () => {
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .custom-file-input {
   flex-grow: 1;
+  min-width: 250px;
   padding: 0.5rem;
   border: 1px dashed var(--el-text-color-secondary);
   border-radius: 4px;

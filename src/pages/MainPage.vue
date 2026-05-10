@@ -86,6 +86,18 @@ onBeforeMount(async () => {
 
 .main-content {
   flex-grow: 1;
+  padding: 1rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 0.5rem;
+  }
 }
 </style>
 

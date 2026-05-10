@@ -65,9 +65,11 @@ async function submitCase() {
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .flex-grow-input {
   flex-grow: 1;
+  min-width: 250px;
 }
 </style>
