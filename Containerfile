@@ -11,7 +11,7 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-ENV VITE_PRAWOBIORCA_API_URL=https://www.prawobiorca.pl/api/v2
+ENV VITE_PRAWOBIORCA_API_URL=https://www.prawobiorca.pl/api
 RUN pnpm run build
 
 
