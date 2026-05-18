@@ -2,6 +2,7 @@
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { getApiErrorMessage } from '@/utils/error'
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -16,7 +17,7 @@ const isLoading = ref(false)
 
 const onSubmit = async () => {
   if (!form.username || !form.password) {
-    errorMessage.value = "Wypełnij wszystkie pola."
+    errorMessage.value = 'Wypełnij wszystkie pola.'
     return
   }
 
@@ -24,12 +25,10 @@ const onSubmit = async () => {
   errorMessage.value = ''
 
   try {
-
     await authStore.login(form.username, form.password)
-
     await router.push('/')
-  } catch {
-    errorMessage.value = 'Nieprawidłowa nazwa użytkownika lub hasło.'
+  } catch (error: unknown) {
+    errorMessage.value = getApiErrorMessage(error)
   } finally {
     isLoading.value = false
   }
@@ -37,12 +36,15 @@ const onSubmit = async () => {
 </script>
 
 <template>
-  <el-form
-    :model="form"
-    label-position="top"
-    autocomplete="on"
-    @submit.prevent="onSubmit"
-  >
+  <el-form :model="form" label-position="top" autocomplete="on" @submit.prevent="onSubmit">
+    <el-alert
+      v-if="errorMessage"
+      :title="errorMessage"
+      type="error"
+      show-icon
+      class="mb-3"
+      :closable="false"
+    />
 
     <el-form-item label="Nazwa użytkownika:" prop="username">
       <el-input
@@ -67,13 +69,7 @@ const onSubmit = async () => {
     </el-form-item>
 
     <el-form-item>
-      <el-button
-        type="primary"
-        :loading="isLoading"
-        native-type="submit"
-      >
-        Zaloguj
-      </el-button>
+      <el-button type="primary" :loading="isLoading" native-type="submit"> Zaloguj </el-button>
     </el-form-item>
   </el-form>
 </template>
