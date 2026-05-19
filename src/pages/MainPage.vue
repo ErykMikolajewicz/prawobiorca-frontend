@@ -14,6 +14,10 @@ import type {fileRepresentation} from '@/types/api/files.ts'
 import {getCases} from "@/api/cases.ts"
 import type {caseData} from '@/types/api/cases.ts'
 
+import { getPublicFiles, getUserFiles } from '@/api/files.ts'
+import type { fileRepresentation } from '@/types/api/files.ts'
+import { getCases } from '@/api/cases.ts'
+import type { caseData } from '@/types/api/cases.ts'
 
 import { useAuthStore } from '@/stores/auth'
 
@@ -32,10 +36,12 @@ function handleCaseCreated(newCase: caseData) {
 
 function handleFileDeleted(fileHashStr: string) {
   userFiles.value = userFiles.value.filter(file => file.file_hash_str !== fileHashStr)
+  userFiles.value = userFiles.value.filter((file) => file.file_hash_str !== fileHashStr)
 }
 
 function handleCaseDeleted(caseId: string) {
   cases.value = cases.value.filter(c => c.id !== caseId)
+  cases.value = cases.value.filter((c) => c.id !== caseId)
 }
 
 onBeforeMount(async () => {
@@ -43,6 +49,22 @@ onBeforeMount(async () => {
   if (isUserLogged.value){
     userFiles.value = await getUserFiles()
     cases.value = await getCases()
+  try {
+    publicFiles.value = await getPublicFiles()
+  } catch (error) {
+    console.error('Failed to fetch public files:', error)
+    publicFiles.value = []
+  }
+
+  if (isUserLogged.value) {
+    try {
+      userFiles.value = await getUserFiles()
+      cases.value = await getCases()
+    } catch (error) {
+      console.error('Failed to fetch user data:', error)
+      userFiles.value = []
+      cases.value = []
+    }
   }
 })
 </script>
