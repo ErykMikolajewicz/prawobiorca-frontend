@@ -1,18 +1,26 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import UserFileCard from '@/components/molecules/UserFileCard.vue'
+import FileCreationCard from '@/components/molecules/FileCreationCard.vue'
 
 type Props = {
   files: Array<{
-    presentation_name: string;
-    file_hash_str: string;
-    is_prepared: boolean;
-  }>;
+    presentation_name: string
+    file_hash_str: string
+    is_prepared: boolean
+  }>
 }
 
 defineProps<Props>()
 
+const fileCreationCardRef = ref<InstanceType<typeof FileCreationCard>>()
+
 const emit = defineEmits<{
   (e: 'fileDeleted', fileHashStr: string): void
+  (
+    e: 'file-created',
+    file: { presentation_name: string; file_hash_str: string; is_prepared: boolean }
+  ): void
 }>()
 </script>
 
@@ -20,19 +28,26 @@ const emit = defineEmits<{
   <div class="user-files-container">
     <h2 class="section-title">Pliki użytkownika</h2>
 
-    <div v-if="files.length" class="files-grid">
+    <div class="files-grid">
       <UserFileCard
         v-for="file in files"
         :key="file.file_hash_str"
         :file="file"
         @deleted="(hash) => emit('fileDeleted', hash)"
       />
+
+      <FileCreationCard
+        ref="fileCreationCardRef"
+        :class="files.length === 0 ? 'hidden-card' : ''"
+        @file-created="(file) => emit('file-created', file)"
+      />
     </div>
 
-    <el-empty
-      v-else
-      description="Brak plików."
-    />
+    <el-empty v-if="files.length === 0" description="Nie masz jeszcze żadnych plików.">
+      <el-button type="primary" @click="fileCreationCardRef?.triggerFileInput()"
+        >Wyślij plik</el-button
+      >
+    </el-empty>
   </div>
 </template>
 
@@ -57,5 +72,8 @@ const emit = defineEmits<{
   gap: 1rem;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
 }
-</style>
 
+.hidden-card {
+    display: none;
+}
+</style>

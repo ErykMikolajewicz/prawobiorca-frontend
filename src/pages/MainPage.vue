@@ -7,13 +7,6 @@ import AppFooter from '@/components/organisms/AppFooter.vue'
 import PublicFilesList from '@/components/organisms/PublicFilesList.vue'
 import UserFilesList from '@/components/organisms/UserFilesList.vue'
 import UserCasesList from '@/components/organisms/UserCasesList.vue'
-import AddFileForm from '@/components/organisms/AddFileForm.vue'
-import NewCaseForm from '@/components/organisms/NewCaseForm.vue'
-import {getPublicFiles, getUserFiles} from "@/api/files.ts"
-import type {fileRepresentation} from '@/types/api/files.ts'
-import {getCases} from "@/api/cases.ts"
-import type {caseData} from '@/types/api/cases.ts'
-
 import { getPublicFiles, getUserFiles } from '@/api/files.ts'
 import type { fileRepresentation } from '@/types/api/files.ts'
 import { getCases } from '@/api/cases.ts'
@@ -35,20 +28,14 @@ function handleCaseCreated(newCase: caseData) {
 }
 
 function handleFileDeleted(fileHashStr: string) {
-  userFiles.value = userFiles.value.filter(file => file.file_hash_str !== fileHashStr)
   userFiles.value = userFiles.value.filter((file) => file.file_hash_str !== fileHashStr)
 }
 
 function handleCaseDeleted(caseId: string) {
-  cases.value = cases.value.filter(c => c.id !== caseId)
   cases.value = cases.value.filter((c) => c.id !== caseId)
 }
 
 onBeforeMount(async () => {
-  publicFiles.value = await getPublicFiles()
-  if (isUserLogged.value){
-    userFiles.value = await getUserFiles()
-    cases.value = await getCases()
   try {
     publicFiles.value = await getPublicFiles()
   } catch (error) {
@@ -83,19 +70,15 @@ onBeforeMount(async () => {
 
         <el-divider />
 
-        <AddFileForm />
-
-        <el-divider />
-
-        <UserCasesList :cases="cases" @case-deleted="handleCaseDeleted" />
-
-        <el-divider />
-
-        <NewCaseForm @case-created="handleCaseCreated" />
+        <UserCasesList
+          :cases="cases"
+          @case-deleted="handleCaseDeleted"
+          @case-created="handleCaseCreated"
+        />
       </template>
     </main>
 
-  <AppFooter />
+    <AppFooter />
   </div>
 </template>
 
@@ -111,7 +94,7 @@ onBeforeMount(async () => {
   padding: 1rem;
   width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
+  /* margin: 1em; */
   box-sizing: border-box;
   overflow-x: hidden;
 }
@@ -122,4 +105,3 @@ onBeforeMount(async () => {
   }
 }
 </style>
-
