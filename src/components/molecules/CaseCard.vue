@@ -2,13 +2,16 @@
 import { ref } from 'vue'
 import { deleteCase } from '@/api/cases'
 import { ElMessage } from 'element-plus'
+import DeleteOutlineRoundedIcon from '@iconify-vue/material-symbols/delete-outline-rounded'
+import ArrowRightAltRoundedIcon from '@iconify-vue/material-symbols/arrow-right-alt-rounded'
+import IconMotion from '@/components/atoms/IconMotion.vue'
 
 type Props = {
   userCase: {
-    id: string;
-    name: string;
-  };
-  index: number;
+    id: string
+    name: string
+  }
+  index: number
 }
 
 const props = defineProps<Props>()
@@ -35,41 +38,41 @@ async function handleDelete() {
 </script>
 
 <template>
-  <el-card shadow="hover" class="case-card">
-    <div class="card-content">
-      <div class="case-info">
-        <span class="case-name" :title="userCase.name">{{ userCase.name }}</span>
+  <router-link :to="`/user/cases/${userCase.id}`" class="case-card-link">
+    <el-card shadow="hover" class="case-card">
+      <div class="card-content">
+        <div class="case-info">
+          <span class="case-name" :title="userCase.name">{{ userCase.name }}</span>
+        </div>
+        <div class="actions">
+          <IconMotion motion-type="arrow">
+            <ArrowRightAltRoundedIcon />
+          </IconMotion>
+          <el-popconfirm
+            title="Czy na pewno chcesz usunąć tę sprawę?"
+            confirm-button-text="Tak"
+            cancel-button-text="Nie"
+            @confirm="handleDelete"
+          >
+            <template #reference>
+              <button class="icon-btn icon-btn-danger" :disabled="isDeleting" @click.prevent.stop>
+                <DeleteOutlineRoundedIcon />
+              </button>
+            </template>
+          </el-popconfirm>
+        </div>
       </div>
-      <div class="actions">
-        <router-link class="action-link" :to="`/user/cases/${userCase.id}`">
-          <el-button type="primary" class="full-width-btn">Przejdź</el-button>
-        </router-link>
-        <el-popconfirm
-          title="Czy na pewno chcesz usunąć tę sprawę?"
-          confirm-button-text="Tak"
-          cancel-button-text="Nie"
-          @confirm="handleDelete"
-        >
-          <template #reference>
-            <el-button type="danger" :loading="isDeleting" class="full-width-btn">Usuń</el-button>
-          </template>
-        </el-popconfirm>
-      </div>
-    </div>
-  </el-card>
+    </el-card>
+  </router-link>
 </template>
 
 <style scoped>
 .case-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.case-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(138, 43, 226, 0.12);
+  height: 100%;
 }
 
 .card-content {
+  margin-inline: auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -88,24 +91,39 @@ async function handleDelete() {
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
   font-weight: 500;
   color: var(--el-text-color-primary);
 }
 
-.action-link {
-  flex-shrink: 0;
-  text-decoration: none;
-  display: block;
-  width: 100%;
+.case-card:hover {
+  :deep(.arrow-icon) {
+    color: var(--el-color-primary);
+  }
+
+  :deep(.arrow-icon-out) {
+    opacity: 0;
+    transform: translateX(2em);
+  }
+
+  :deep(.arrow-icon-in) {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.icon-btn-danger:hover {
+  color: var(--el-color-danger);
+}
+
+.icon-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .actions {
   display: flex;
-  flex-direction: column;
   gap: 8px;
   flex-shrink: 0;
-  min-width: 130px;
 }
 
 .full-width-btn {
@@ -116,5 +134,11 @@ async function handleDelete() {
 .form-action {
   margin: 0;
   width: 100%;
+}
+
+.case-card-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
 }
 </style>
