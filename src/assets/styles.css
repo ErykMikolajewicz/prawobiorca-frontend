@@ -3,6 +3,7 @@
   --el-color-primary-light-3: #ad66eb;
   --el-color-primary-light-5: #c491f0;
   --el-color-primary-light-7: #dbbdf5;
+  --el-color-primary-light-8: #e9d5f8;
   --el-color-primary-light-9: #f3eafa;
   --el-color-primary-dark-2: #6e22b5;
 
@@ -15,6 +16,17 @@
   --el-text-color-secondary: #909399;
 }
 
+.el-empty {
+    --el-empty-fill-color-1: #f8f6fb;
+    --el-empty-fill-color-2: #efe8fb;
+    --el-empty-fill-color-3: #e8e0f7;
+    --el-empty-fill-color-4: #e0d8f0;
+    --el-empty-fill-color-5: #d8d0ed;
+    --el-empty-fill-color-6: #cdc0e8;
+    --el-empty-fill-color-7: #b5a8db;
+    --el-empty-fill-color-8: #9d8ecc;
+    --el-empty-fill-color-9: #806db8;
+}
 
 body {
   background-color: var(--el-bg-color-page);
@@ -24,6 +36,31 @@ body {
   min-height: 100vh;
 }
 
+main {
+    margin: auto;
+    min-width: 60rem;
+}
+
 #app {
   min-height: 100vh;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--el-text-color-primary);
+  border-radius: 4px;
+  text-decoration: none;
+  overflow: hidden;
+  width: 3em;
+}
+
+.icon-btn :deep(svg) {
+  width: 1.5em;
+  height: 1.5em;
 }

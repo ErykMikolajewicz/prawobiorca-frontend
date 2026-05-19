@@ -55,14 +55,14 @@ const handleGeneratePdf = async (description: string) => {
 
     <h1>Szczegóły Sprawy</h1>
 
-      <el-row :gutter="20">
-        <el-col :span="12">
+      <el-row>
+        <el-col :span="12" :xs="24">
           <section>
             <h2>Przypięte Artykuły</h2>
             <PinnedArticlesList :articles="articles" @unpin="handleUnpin" />
           </section>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="12" :xs="24">
           <section>
             <h2>Kontekst / Opis Wniosku</h2>
             <GeneratePdfForm :caseId="caseId" @generate-pdf="handleGeneratePdf" />
