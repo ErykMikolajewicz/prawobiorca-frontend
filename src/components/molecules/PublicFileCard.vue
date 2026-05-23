@@ -92,8 +92,4 @@ defineProps<Props>()
   }
 }
 
-.action-link {
-  flex-shrink: 0;
-  text-decoration: none;
-}
 </style>

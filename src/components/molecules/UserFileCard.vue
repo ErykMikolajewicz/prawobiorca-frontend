@@ -169,10 +169,6 @@ async function handleDelete() {
   align-items: center;
 }
 
-.action-btn {
-  flex-shrink: 0;
-}
-
 .form-action {
   margin: 0;
   padding: 0;

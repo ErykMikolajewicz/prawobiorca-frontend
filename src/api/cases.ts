@@ -26,7 +26,6 @@ export async function getCaseArticles(caseId: string): Promise<Array<articleData
         if (response.status == 204) {
             return []
         }
-        // Validate that response is an array
         if (Array.isArray(response.data)) {
             return response.data
         }

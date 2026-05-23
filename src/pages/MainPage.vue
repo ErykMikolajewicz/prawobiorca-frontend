@@ -27,7 +27,11 @@ function handleCaseCreated(newCase: caseData) {
   cases.value.push(newCase)
 }
 
-function handleFileDeleted(fileHashStr: string) {
+function handleUserFileCreated(newFile: fileRepresentation) {
+  userFiles.value.push(newFile)
+}
+
+function handleUserFileDeleted(fileHashStr: string) {
   userFiles.value = userFiles.value.filter((file) => file.file_hash_str !== fileHashStr)
 }
 
@@ -66,7 +70,9 @@ onBeforeMount(async () => {
       <el-divider />
 
       <template v-if="isUserLogged">
-        <UserFilesList :files="userFiles" @file-deleted="handleFileDeleted" />
+        <UserFilesList :files="userFiles"
+                       @user-file-deleted="handleUserFileDeleted"
+                       @user-file-created="handleUserFileCreated"/>
 
         <el-divider />
 
@@ -94,7 +100,6 @@ onBeforeMount(async () => {
   padding: 1rem;
   width: 100%;
   max-width: 1200px;
-  /* margin: 1em; */
   box-sizing: border-box;
   overflow-x: hidden;
 }

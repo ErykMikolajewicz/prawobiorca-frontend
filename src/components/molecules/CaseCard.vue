@@ -126,16 +126,6 @@ async function handleDelete() {
   flex-shrink: 0;
 }
 
-.full-width-btn {
-  width: 100%;
-  margin-left: 0;
-}
-
-.form-action {
-  margin: 0;
-  width: 100%;
-}
-
 .case-card-link {
   display: block;
   color: inherit;

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import CaseCard from '@/components/molecules/CaseCard.vue'
 import CaseCreationCard from '@/components/molecules/CaseCreationCard.vue'
 
@@ -11,9 +10,6 @@ type Props = {
 }
 
 const props = defineProps<Props>()
-
-const caseCreationCardRef = ref<InstanceType<typeof CaseCreationCard>>()
-const isCreatingFirstCase = ref(false)
 
 const emit = defineEmits<{
   (e: 'case-deleted', caseId: string): void
@@ -35,27 +31,9 @@ const emit = defineEmits<{
       />
 
       <CaseCreationCard
-        ref="caseCreationCardRef"
-        :class="!isCreatingFirstCase && props.cases.length === 0 ? 'empty-card' : ''"
         @case-created="(newCase) => emit('case-created', newCase)"
       />
     </div>
-
-    <el-empty
-      v-if="props.cases.length === 0 && !isCreatingFirstCase"
-      description="Nie masz jeszcze żadnych spraw."
-    >
-      <el-button
-        type="primary"
-        @click="
-          () => {
-            isCreatingFirstCase = true
-            caseCreationCardRef?.triggerInput()
-          }
-        "
-        >Utwórz sprawę</el-button
-      >
-    </el-empty>
   </div>
 </template>
 
@@ -81,7 +59,4 @@ const emit = defineEmits<{
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
 }
 
-.empty-card {
-  display: none;
-}
 </style>
