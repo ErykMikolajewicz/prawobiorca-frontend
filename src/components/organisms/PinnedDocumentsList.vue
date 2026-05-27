@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import PinnedArticle from '@/components/molecules/PinnedArticle.vue'
-import type {articleData} from "@/types/api/articles.ts"
+import PinnedDocument from '@/components/molecules/PinnedDocument.vue'
+import type {DocumentData} from "@/types/api/documents.ts"
 
-defineProps<{ articles: Array<articleData> }>()
+defineProps<{ documents: Array<DocumentData> }>()
 
 const emit = defineEmits<{
   (e: 'unpin', id: string): void
@@ -14,11 +14,11 @@ const handleUnpin = (id: string) => {
 </script>
 
 <template>
-    <div v-if="articles.length > 0">
-      <PinnedArticle
-        v-for="article in articles"
-        :key="article.id"
-        :article="article"
+    <div v-if="documents.length > 0">
+      <PinnedDocument
+        v-for="document in documents"
+        :key="document.id"
+        :document="document"
         @unpin="handleUnpin"
       />
     </div>

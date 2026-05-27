@@ -4,11 +4,11 @@ import { storeToRefs } from 'pinia'
 
 import AppNavbar from '@/components/organisms/AppNavbar.vue'
 import AppFooter from '@/components/organisms/AppFooter.vue'
-import PublicFilesList from '@/components/organisms/PublicFilesList.vue'
-import UserFilesList from '@/components/organisms/UserFilesList.vue'
+import PublicFilesList from '@/components/organisms/PublicRegulationsList.vue'
+import UserRegulationsList from '@/components/organisms/UserRegulationsList.vue'
 import UserCasesList from '@/components/organisms/UserCasesList.vue'
-import { getPublicFiles, getUserFiles } from '@/api/files.ts'
-import type { fileRepresentation } from '@/types/api/files.ts'
+import { getPublicRegulations, getUserRegulations } from '@/api/regulations.ts'
+import type { regulationRepresentation } from '@/types/api/regulations.ts'
 import { getCases } from '@/api/cases.ts'
 import type { caseData } from '@/types/api/cases.ts'
 
@@ -17,9 +17,9 @@ import { useAuthStore } from '@/stores/auth'
 const authStore = useAuthStore()
 const { isUserLogged } = storeToRefs(authStore)
 
-const publicFiles = ref<Array<fileRepresentation>>([])
+const publicRegulations = ref<Array<regulationRepresentation>>([])
 
-const userFiles = ref<Array<fileRepresentation>>([])
+const userRegulations = ref<Array<regulationRepresentation>>([])
 
 const cases = ref<Array<caseData>>([])
 
@@ -27,12 +27,12 @@ function handleCaseCreated(newCase: caseData) {
   cases.value.push(newCase)
 }
 
-function handleUserFileCreated(newFile: fileRepresentation) {
-  userFiles.value.push(newFile)
+function handleUserRegulationCreated(newFile: regulationRepresentation) {
+  userRegulations.value.push(newFile)
 }
 
-function handleUserFileDeleted(fileHashStr: string) {
-  userFiles.value = userFiles.value.filter((file) => file.file_hash_str !== fileHashStr)
+function handleUserRegulationDeleted(regulationId: string) {
+  userRegulations.value = userRegulations.value.filter((regulation) => regulation.id !== regulationId)
 }
 
 function handleCaseDeleted(caseId: string) {
@@ -41,19 +41,19 @@ function handleCaseDeleted(caseId: string) {
 
 onBeforeMount(async () => {
   try {
-    publicFiles.value = await getPublicFiles()
+    publicRegulations.value = await getPublicRegulations()
   } catch (error) {
     console.error('Failed to fetch public files:', error)
-    publicFiles.value = []
+    publicRegulations.value = []
   }
 
   if (isUserLogged.value) {
     try {
-      userFiles.value = await getUserFiles()
+      userRegulations.value = await getUserRegulations()
       cases.value = await getCases()
     } catch (error) {
       console.error('Failed to fetch user data:', error)
-      userFiles.value = []
+      userRegulations.value = []
       cases.value = []
     }
   }
@@ -65,14 +65,14 @@ onBeforeMount(async () => {
     <AppNavbar />
 
     <main class="main-content">
-      <PublicFilesList :files="publicFiles" />
+      <PublicFilesList :regulations="publicRegulations" />
 
       <el-divider />
 
       <template v-if="isUserLogged">
-        <UserFilesList :files="userFiles"
-                       @user-file-deleted="handleUserFileDeleted"
-                       @user-file-created="handleUserFileCreated"/>
+        <UserRegulationsList :regulations="userRegulations"
+                       @user-regulation-deleted="handleUserRegulationDeleted"
+                       @user-regulation-created="handleUserRegulationCreated"/>
 
         <el-divider />
 

@@ -7,12 +7,12 @@ import { useRouter } from 'vue-router'
 
 import AppNavbar from '@/components/organisms/AppNavbar.vue'
 import AppFooter from '@/components/organisms/AppFooter.vue'
-import PinnedArticlesList from '@/components/organisms/PinnedArticlesList.vue'
+import PinnedDocumentsList from '@/components/organisms/PinnedDocumentsList.vue'
 import GeneratePdfForm from '@/components/organisms/GeneratePdfForm.vue'
 
-import { getCaseArticles, unpinArticle, generatePdf } from '@/api/cases.ts'
+import { getCaseDocuments, unpinDocument, generatePdf } from '@/api/cases.ts'
 
-import type {articleData} from "@/types/api/articles.ts"
+import type {DocumentData} from "@/types/api/documents.ts"
 import {ArrowLeft} from "@element-plus/icons-vue"
 
 const route = useRoute()
@@ -22,21 +22,21 @@ const caseId = route.params.id as string
 const authStore = useAuthStore()
 const { isUserLogged } = storeToRefs(authStore)
 
-const articles = ref<Array<articleData>>([])
+const documents = ref<Array<DocumentData>>([])
 
-const loadArticles = async () => {
+const loadDocuments = async () => {
   if (isUserLogged.value) {
-    articles.value = await getCaseArticles(caseId)
+    documents.value = await getCaseDocuments(caseId)
   }
 }
 
 onBeforeMount(async () => {
-  await loadArticles()
+  await loadDocuments()
 })
 
 const handleUnpin = async (articleId: string) => {
-  await unpinArticle(articleId)
-  await loadArticles()
+  await unpinDocument(articleId)
+  await loadDocuments()
 }
 
 const handleGeneratePdf = async (description: string) => {
@@ -58,8 +58,8 @@ const handleGeneratePdf = async (description: string) => {
       <el-row>
         <el-col :span="12" :xs="24">
           <section>
-            <h2>Przypięte Artykuły</h2>
-            <PinnedArticlesList :articles="articles" @unpin="handleUnpin" />
+            <h2>Przypięte Dokumenty</h2>
+            <PinnedDocumentsList :documents="documents" @unpin="handleUnpin" />
           </section>
         </el-col>
         <el-col :span="12" :xs="24">

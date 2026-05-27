@@ -1,8 +1,8 @@
 <script setup lang="ts">
 
-import type {articleData} from "@/types/api/articles.ts"
+import type {DocumentData} from "@/types/api/documents.ts"
 
-type Props = {article: articleData}
+type Props = {document: DocumentData}
 const props = defineProps<Props>()
 
 const emit = defineEmits<{
@@ -10,7 +10,7 @@ const emit = defineEmits<{
 }>()
 
 const handleUnpin = () => {
-  emit('unpin', props.article.id)
+  emit('unpin', props.document.id)
 }
 </script>
 
@@ -18,9 +18,9 @@ const handleUnpin = () => {
   <el-card shadow="hover">
     <template #header>
         <strong>Źródło:</strong>
-        <em>{{ article.presentationName }}</em>
+        <em>{{ document.presentationName }}</em>
         <el-button type="danger" @click="handleUnpin">Odepnij</el-button>
     </template>
-    <p>{{ article.content }}</p>
+    <p>{{ document.content }}</p>
   </el-card>
 </template>

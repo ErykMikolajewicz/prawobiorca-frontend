@@ -14,13 +14,13 @@ const router = createRouter({
       component: MainPage
     },
     {
-      path: '/search/public-file/:fileHashStr',
-      name: 'SearchPublicFile',
+      path: '/regulations/:regulationId/documents',
+      name: 'SearchPublicRegulation',
       component: SearchPage
     },
     {
-      path: '/search/user/file/:fileHashStr',
-      name: 'SearchUserFile',
+      path: '/user/regulations/:regulationId/documents',
+      name: 'SearchUserRegulation',
       component: SearchPage
     },
     {

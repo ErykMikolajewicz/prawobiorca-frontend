@@ -1,24 +1,21 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { deleteUserFile } from '@/api/files'
+import { deleteUserRegulation } from '@/api/regulations'
 import { ElMessage } from 'element-plus'
 import SearchRoundedIcon from '@iconify-vue/material-symbols/search-rounded'
 import DeleteOutlineRoundedIcon from '@iconify-vue/material-symbols/delete-outline-rounded'
 import SettingsIcon from '@iconify-vue/material-symbols/settings-rounded'
 import IconMotion from '@/components/atoms/IconMotion.vue'
+import type { regulationRepresentation } from "@/types/api/regulations.ts"
 
 type Props = {
-  file: {
-    presentation_name: string
-    file_hash_str: string
-    is_prepared: boolean
-  }
+  regulation: regulationRepresentation
 }
 
 const props = defineProps<Props>()
 
 const emit = defineEmits<{
-  (e: 'deleted', fileHashStr: string): void
+  (e: 'deleted', regulationId: string): void
 }>()
 
 const isDeleting = ref(false)
@@ -26,11 +23,11 @@ const isDeleting = ref(false)
 async function handleDelete() {
   try {
     isDeleting.value = true
-    await deleteUserFile(props.file.file_hash_str)
-    ElMessage.success('Plik został usunięty')
-    emit('deleted', props.file.file_hash_str)
+    await deleteUserRegulation(props.regulation.id)
+    ElMessage.success('Regulacja została usunięta')
+    emit('deleted', props.regulation.id)
   } catch (error) {
-    ElMessage.error('Nie udało się usunąć pliku')
+    ElMessage.error('Nie udało się usunąć regulacji')
     console.error(error)
   } finally {
     isDeleting.value = false
@@ -40,27 +37,27 @@ async function handleDelete() {
 
 <template>
   <component
-    :is="file.is_prepared ? 'router-link' : 'div'"
+    :is="regulation.isPrepared ? 'router-link' : 'div'"
     :to="
-      file.is_prepared
+      regulation.isPrepared
         ? {
-            name: 'SearchUserFile',
-            params: { fileHashStr: file.file_hash_str },
-            state: { filename: file.presentation_name }
+            name: 'SearchUserRegulation',
+            params: { regulationId: regulation.id },
+            state: { filename: regulation.presentationName }
           }
         : undefined
     "
-    :class="file.is_prepared ? 'file-card-link' : ''"
+    :class="regulation.isPrepared ? 'file-card-link' : ''"
   >
     <el-card shadow="hover" class="file-card">
       <div class="card-content">
-        <div class="file-info">
-          <span class="file-name" :title="file.presentation_name">{{
-            file.presentation_name
+        <div class="regulation-info">
+          <span class="regulation-name" :title="regulation.presentationName">{{
+            regulation.presentationName
           }}</span>
         </div>
         <div class="actions">
-          <span v-if="file.is_prepared">
+          <span v-if="regulation.isPrepared">
             <IconMotion motion-type="search">
               <SearchRoundedIcon />
             </IconMotion>
@@ -69,18 +66,18 @@ async function handleDelete() {
           <form
             v-else
             class="form-action"
-            :action="`/user/files/${file.presentation_name}/preparation`"
+            :action="`/user/regulations/${regulation.id}/preparation`"
             method="post"
             @submit.stop
           >
-            <input type="hidden" name="fileHashStr" :value="file.file_hash_str" />
+            <input type="hidden" name="regulationId" :value="regulation.id" />
             <button class="icon-btn" type="submit" @click.stop>
               <SettingsIcon />
             </button>
           </form>
 
           <el-popconfirm
-            title="Czy na pewno chcesz usunąć ten plik?"
+            title="Czy na pewno chcesz usunąć tę regulację?"
             confirm-button-text="Tak"
             cancel-button-text="Nie"
             @confirm="handleDelete"
@@ -116,12 +113,12 @@ async function handleDelete() {
   gap: 16px;
 }
 
-.file-info {
+.regulation-info {
   flex: 1;
   min-width: 0;
 }
 
-.file-name {
+.regulation-name {
   display: block;
   font-weight: 500;
   color: var(--el-text-color-primary);
@@ -140,16 +137,6 @@ async function handleDelete() {
 
   :deep(.icon-btn) {
     color: var(--el-color-primary);
-  }
-
-  :deep(.search-icon-out) {
-    opacity: 0;
-    transform: translateX(2em);
-  }
-
-  :deep(.search-icon-in) {
-    opacity: 1;
-    transform: translateX(0);
   }
 }
 

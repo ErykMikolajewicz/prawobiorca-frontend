@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { uploadFile } from '@/api/files'
+import { uploadRegulation } from '@/api/regulations'
 import { ElMessage } from 'element-plus'
 import AttachFileRoundedIcon from '@iconify-vue/material-symbols/attach-file-rounded'
+import type {regulationRepresentation} from '@/types/api/regulations.ts'
 
 const fileInputRef = ref<HTMLInputElement | null>(null)
 
 const emit = defineEmits<{
   (
-    e: 'file-created',
-    file: { presentation_name: string; file_hash_str: string; is_prepared: boolean }
+    e: 'regulation-created',
+    regulation: regulationRepresentation
   ): void
 }>()
 
@@ -22,23 +23,23 @@ const submitFile = async () => {
   const file = fileInput?.files?.[0]
 
   if (!file) {
-    ElMessage.warning('Wybierz plik do przesłania.')
+    ElMessage.warning('Wybierz regulację do przesłania.')
     return
   }
 
   try {
-    const fileHashStr = await uploadFile(file)
-    ElMessage.success('Plik został pomyślnie dodany.')
+    const regulationId = await uploadRegulation(file)
+    ElMessage.success('Regulacja został pomyślnie dodana.')
 
-    emit('file-created', {
-      presentation_name: file.name,
-      file_hash_str: fileHashStr,
-      is_prepared: false
+    emit('regulation-created', {
+      id: regulationId,
+      presentationName: file.name,
+      isPrepared: false
     })
 
     fileInput.value = ''
   } catch {
-    ElMessage.error('Wystąpił błąd podczas dodawania pliku.')
+    ElMessage.error('Wystąpił błąd podczas dodawania regulacji.')
   }
 }
 
@@ -52,7 +53,7 @@ defineExpose({
     <form
       class="file-form"
       method="post"
-      action="/user/files"
+      action="/user/regulations"
       enctype="multipart/form-data"
       @submit.prevent="submitFile"
     >

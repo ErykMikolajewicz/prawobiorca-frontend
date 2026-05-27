@@ -1,6 +1,6 @@
 import { prawobiorcaClient } from '@/api/axios'
 import type { caseData } from '@/types/api/cases.ts'
-import type { articleData } from "@/types/api/articles.ts"
+import type { DocumentData } from "@/types/api/documents.ts"
 
 
 export async function getCases(): Promise<Array<caseData>> {
@@ -20,9 +20,9 @@ export async function getCases(): Promise<Array<caseData>> {
     }
 }
 
-export async function getCaseArticles(caseId: string): Promise<Array<articleData>> {
+export async function getCaseDocuments(caseId: string): Promise<Array<DocumentData>> {
     try {
-        const response = await prawobiorcaClient.get(`/user/cases/${caseId}/articles`)
+        const response = await prawobiorcaClient.get(`/user/cases/${caseId}/documents`)
         if (response.status == 204) {
             return []
         }
@@ -48,8 +48,8 @@ export async function deleteCase(caseId: string): Promise<void> {
     await prawobiorcaClient.delete(`/user/cases/${caseId}`)
 }
 
-export async function unpinArticle(articleId: string): Promise<void> {
-    await prawobiorcaClient.delete(`/user/cases/articles/${articleId}`)
+export async function unpinDocument(articleId: string): Promise<void> {
+    await prawobiorcaClient.delete(`/user/cases/documents/${articleId}`)
 }
 
 export async function generatePdf(caseId: string, description: string): Promise<void> {

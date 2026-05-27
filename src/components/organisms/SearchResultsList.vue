@@ -9,10 +9,10 @@ defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'add-to-case', payload: { articleContent: string }): void
+  (e: 'add-to-case', payload: { documentContent: string }): void
 }>()
 
-const onAddToCase = (payload: { articleContent: string }) => {
+const onAddToCase = (payload: { documentContent: string }) => {
   emit('add-to-case', payload)
 }
 </script>

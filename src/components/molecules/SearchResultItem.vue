@@ -9,14 +9,14 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'add-to-case', payload: { articleContent: string }): void
+  (e: 'add-to-case', payload: { documentContent: string }): void
 }>()
 
 const authStore = useAuthStore()
 const { isUserLogged } = storeToRefs(authStore)
 
 const handleAddToCase = () => {
-  emit('add-to-case', { articleContent: props.result })
+  emit('add-to-case', { documentContent: props.result })
 }
 </script>
 
@@ -76,7 +76,7 @@ const handleAddToCase = () => {
 .score-label {
   font-size: 0.75em;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
   margin-bottom: 2px;
 }
 

@@ -95,22 +95,6 @@ async function handleDelete() {
   color: var(--el-text-color-primary);
 }
 
-.case-card:hover {
-  :deep(.arrow-icon) {
-    color: var(--el-color-primary);
-  }
-
-  :deep(.arrow-icon-out) {
-    opacity: 0;
-    transform: translateX(2em);
-  }
-
-  :deep(.arrow-icon-in) {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
 .icon-btn-danger:hover {
   color: var(--el-color-danger);
 }

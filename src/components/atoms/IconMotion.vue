@@ -61,15 +61,4 @@ withDefaults(defineProps<Props>(), {
   height: 1.5em;
 }
 
-.search-icon-in,
-.arrow-icon-in {
-  opacity: 0;
-  transform: translateX(-2em);
-}
-
-.search-icon-out,
-.arrow-icon-out {
-  opacity: 1;
-  transform: translateX(0);
-}
 </style>

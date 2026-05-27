@@ -13,19 +13,19 @@ import SearchResultsList from '@/components/organisms/SearchResultsList.vue'
 
 import { useAuthStore } from '@/stores/auth'
 import { getCases } from '@/api/cases'
-import { searchInFile } from '@/api/search'
 import type { caseData } from '@/types/api/cases'
-import {addArticleToCase} from "@/api/articles.ts"
-import type {searchResult, SearchParams} from "@/types/api/search.ts"
+import {addDocumentToCase} from "@/api/documents.ts"
+import type {searchResult, searchParams} from "@/types/api/search.ts"
+import {searchRegulation} from "@/api/regulations.ts"
 
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
 const { isUserLogged } = storeToRefs(authStore)
 
-const fileHashStr = ref((route.params.fileHashStr as string) || '')
-const filename = history.state.filename
-const searchParams = ref<SearchParams>({query: (route.query.query as string) || '',
+const regulationId = ref((route.params.regulationId as string) || '')
+const regulationName = history.state.filename
+const searchParams = ref<searchParams>({query: (route.query.query as string) || '',
   threshold: route.query.threshold !== undefined ? Number(route.query.threshold) : 0.7,
   limit: route.query.limit ? Number(route.query.limit) : undefined})
 
@@ -41,7 +41,7 @@ onBeforeMount(async () => {
 
 })
 
-const handleSearch = async (newSearchParams: SearchParams) => {
+const handleSearch = async (newSearchParams: searchParams) => {
   searchParams.value = newSearchParams
 
   await router.replace({
@@ -51,27 +51,27 @@ const handleSearch = async (newSearchParams: SearchParams) => {
   await performSearch(newSearchParams)
 }
 
-async function performSearch(searchParams: SearchParams) {
+async function performSearch(searchParams: searchParams) {
 
   isSearching.value = true
   try {
-    results.value =  await searchInFile(searchParams, fileHashStr.value)
+    results.value =  await searchRegulation(searchParams, regulationId.value)
   } catch (error) {
-    ElMessage.error('Wystąpił błąd podczas przeszukiwania pliku.')
+    ElMessage.error('Wystąpił błąd podczas przeszukiwania regulacji.')
     console.error(error)
   } finally {
     isSearching.value = false
   }
 }
 
-async function handleAddToCase(payload: { articleContent: string }){
+async function handleAddToCase(payload: { documentContent: string }){
   if (!selectedCaseId.value) {
     ElMessage.warning('Wybierz sprawę z listy.')
     return
   }
 
   try {
-    await addArticleToCase(selectedCaseId.value, filename, payload.articleContent)
+    await addDocumentToCase(selectedCaseId.value, regulationName, payload.documentContent)
     ElMessage.success('Dodano do sprawy.')
   } catch (error) {
     ElMessage.error('Wystąpił błąd podczas dodawania do sprawy.')
@@ -94,7 +94,7 @@ async function handleAddToCase(payload: { articleContent: string }){
         v-model:selectedCaseId="selectedCaseId"
       />
 
-    <h1>Przeszukaj plik: {{ filename }}</h1>
+    <h1>Przeszukaj regulacje: {{ regulationName }}</h1>
 
       <div v-loading="isSearching">
         <SearchForm
