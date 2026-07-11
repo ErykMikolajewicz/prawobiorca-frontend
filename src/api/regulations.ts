@@ -63,6 +63,12 @@ export async function deleteUserRegulation(regulationId: string): Promise<void> 
 
 }
 
+
+export async function prepareUserRegulation(regulationId: string): Promise<void> {
+  await prawobiorcaClient.post(`/user/regulations/${regulationId}/preparation`)
+
+}
+
 export async function searchRegulation(
   searchParams: searchParams,
   regulationId: string
@@ -70,6 +76,21 @@ export async function searchRegulation(
 
 
   const response = await prawobiorcaClient.get(`/regulations/${regulationId}/documents`,
+    {params: {...searchParams}})
+
+  if (response.status === 204) {
+    return []
+  }
+  return response.data
+}
+
+export async function searchUserRegulation(
+  searchParams: searchParams,
+  regulationId: string
+): Promise<Array<searchResult>> {
+
+
+  const response = await prawobiorcaClient.get(`/user/regulations/${regulationId}/documents`,
     {params: {...searchParams}})
 
   if (response.status === 204) {

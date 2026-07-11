@@ -16,7 +16,7 @@ import { getCases } from '@/api/cases'
 import type { caseData } from '@/types/api/cases'
 import {addDocumentToCase} from "@/api/documents.ts"
 import type {searchResult, searchParams} from "@/types/api/search.ts"
-import {searchRegulation} from "@/api/regulations.ts"
+import {searchRegulation, searchUserRegulation} from "@/api/regulations.ts"
 
 const route = useRoute()
 const router = useRouter()
@@ -52,10 +52,16 @@ const handleSearch = async (newSearchParams: searchParams) => {
 }
 
 async function performSearch(searchParams: searchParams) {
-
   isSearching.value = true
+
+  const isUserFile = route.path.includes('/user/regulations')
   try {
-    results.value =  await searchRegulation(searchParams, regulationId.value)
+    if (isUserFile) {
+      results.value =  await searchUserRegulation(searchParams, regulationId.value)
+    }
+    else {
+      results.value =  await searchRegulation(searchParams, regulationId.value)
+    }
   } catch (error) {
     ElMessage.error('Wystąpił błąd podczas przeszukiwania regulacji.')
     console.error(error)

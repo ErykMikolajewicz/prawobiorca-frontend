@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { deleteUserRegulation } from '@/api/regulations'
+import { deleteUserRegulation, prepareUserRegulation } from '@/api/regulations'
 import { ElMessage } from 'element-plus'
 import SearchRoundedIcon from '@iconify-vue/material-symbols/search-rounded'
 import DeleteOutlineRoundedIcon from '@iconify-vue/material-symbols/delete-outline-rounded'
@@ -31,6 +31,16 @@ async function handleDelete() {
     console.error(error)
   } finally {
     isDeleting.value = false
+  }
+}
+
+async function prepareRegulation(regulationId: string) {
+  try {
+    await prepareUserRegulation(regulationId)
+    ElMessage.success('Regulacja została przygotowana')
+
+  } catch (error) {
+    console.error('Nie udało się przygotować regulacji', error)
   }
 }
 </script>
@@ -66,12 +76,9 @@ async function handleDelete() {
           <form
             v-else
             class="form-action"
-            :action="`/user/regulations/${regulation.id}/preparation`"
-            method="post"
-            @submit.stop
+            @submit.prevent="prepareRegulation(regulation.id)"
           >
-            <input type="hidden" name="regulationId" :value="regulation.id" />
-            <button class="icon-btn" type="submit" @click.stop>
+            <button class="icon-btn" type="submit">
               <SettingsIcon />
             </button>
           </form>
