@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 
-import type {SearchParams} from "@/types/api/search.ts"
+import type {searchParams} from "@/types/api/search.ts"
 
 const props = defineProps<{
-  searchParams: SearchParams
+  searchParams: searchParams
 }>()
 
 const emit = defineEmits<{
-  (e: 'search', searchConfig: SearchParams): void
+  (e: 'search', searchConfig: searchParams): void
 }>()
 
-const searchParams = reactive<SearchParams>({
+const searchParams = reactive<searchParams>({
   ...props.searchParams,
+  threshold: props.searchParams.threshold ?? 0.2
 })
 
 function onSubmit(){
@@ -35,14 +36,18 @@ function onSubmit(){
     <el-row :gutter="20">
       <el-col :span="12">
         <el-form-item label="Poziom istotności:">
-          <el-input-number
-            v-model="searchParams.threshold"
-            :min="-1"
-            :max="1"
-            :step="0.1"
-            :precision="2"
-            style="width: 100%"
-          />
+          <!-- Używamy flexboxa, aby umieścić wartości po bokach -->
+          <div style="display: flex; align-items: center; gap: 15px; width: 100%;">
+            <span style="color: var(--el-text-color-secondary);">-1</span>
+            <el-slider
+              v-model="searchParams.threshold"
+              :min="-1"
+              :max="1"
+              :step="0.1"
+              style="flex: 1;"
+            />
+            <span style="color: var(--el-text-color-secondary);">1</span>
+          </div>
         </el-form-item>
       </el-col>
       <el-col :span="12">
