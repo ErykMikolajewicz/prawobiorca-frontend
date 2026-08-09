@@ -110,8 +110,9 @@ async function prepareRegulation(regulationId: string) {
 }
 
 .file-card:hover {
-  box-shadow: 0 4px 12px rgba(138, 43, 226, 0.12);
+  box-shadow: var(--app-card-shadow);
 }
+
 
 .card-content {
   display: flex;
@@ -139,8 +140,9 @@ async function prepareRegulation(regulationId: string) {
 
 .file-card-link:hover {
   .file-card {
-    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.12);
+    box-shadow: var(--app-card-shadow);
   }
+
 
   :deep(.icon-btn) {
     color: var(--el-color-primary);

@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import SearchResultItem from '@/components/molecules/SearchResultItem.vue'
 import type {searchResult} from '@/types/api/search.ts'
 
-defineProps<{
+const props = defineProps<{
   results: Array<searchResult>
   selectedCaseId?: string
   query: string
@@ -15,6 +16,27 @@ const emit = defineEmits<{
 const onAddToCase = (payload: { documentContent: string }) => {
   emit('add-to-case', payload)
 }
+
+type ResultGroup = {
+  header: string
+  items: Array<searchResult>
+}
+
+const groupedResults = computed<Array<ResultGroup>>(() => {
+  const groups: Array<ResultGroup> = []
+
+  for (const result of props.results) {
+    const lastGroup = groups[groups.length - 1]
+
+    if (lastGroup && lastGroup.header === result.header) {
+      lastGroup.items.push(result)
+    } else {
+      groups.push({ header: result.header, items: [result] })
+    }
+  }
+
+  return groups
+})
 </script>
 
 <template>
@@ -23,17 +45,37 @@ const onAddToCase = (payload: { documentContent: string }) => {
 
     <div v-if="results.length">
       <h2>Wyniki:</h2>
+      <div
+        v-for="(group, groupIndex) in groupedResults"
+        :key="groupIndex"
+        class="result-group"
+      >
+        <h3 class="result-group-header">{{ group.header }}</h3>
         <SearchResultItem
-          v-for="{ id, text, score } in results"
+          v-for="{ id, text, score } in group.items"
           :key="id"
           :result="text"
           :score="score"
           :selected-case-id="selectedCaseId"
           @add-to-case="onAddToCase"
         />
+      </div>
     </div>
     <div v-else-if="query">
       <p>Brak wyników dla zapytania: "{{ query }}"</p>
     </div>
   </div>
 </template>
+
+<style scoped>
+.result-group {
+  margin-bottom: 1.5rem;
+}
+
+.result-group-header {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--el-text-color-primary, #303133);
+}
+</style>

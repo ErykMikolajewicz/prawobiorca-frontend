@@ -36,18 +36,22 @@ function onSubmit(){
     <el-row :gutter="20">
       <el-col :span="12">
         <el-form-item label="Poziom istotności:">
-          <!-- Używamy flexboxa, aby umieścić wartości po bokach -->
           <div style="display: flex; align-items: center; gap: 15px; width: 100%;">
-            <span style="color: var(--el-text-color-secondary);">-1</span>
             <el-slider
               v-model="searchParams.threshold"
               :min="-1"
               :max="1"
               :step="0.1"
+              :show-tooltip="false"
               style="flex: 1;"
             />
-            <span style="color: var(--el-text-color-secondary);">1</span>
+            <span
+              style="color: var(--el-text-color-primary); min-width: 40px; text-align: center; font-weight: 500;"
+            >
+              {{ searchParams.threshold.toFixed(1) }}
+            </span>
           </div>
+
         </el-form-item>
       </el-col>
       <el-col :span="12">

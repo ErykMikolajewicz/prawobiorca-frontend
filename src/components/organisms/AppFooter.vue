@@ -9,7 +9,8 @@
 <style scoped>
 .app-footer {
   background-color: var(--el-bg-color);
-  border-top: 1px solid #e4e7ed;
+  border-top: 1px solid var(--app-border-color);
+
   display: flex;
   align-items: center;
   padding: 0 20px;

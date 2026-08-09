@@ -1,6 +1,7 @@
 export type searchResult = {id: string,
   score: number
-  text: string}
+  text: string
+  header: string}
 
 export type searchParams = {
   query: string,

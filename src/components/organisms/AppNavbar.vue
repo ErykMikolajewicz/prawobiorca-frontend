@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AuthControls from '@/components/molecules/AuthControls.vue'
+import DarkModeToggle from '@/components/molecules/DarkModeToggle.vue'
 </script>
 
 <template>
@@ -8,19 +9,29 @@ import AuthControls from '@/components/molecules/AuthControls.vue'
       PRAWOBIORCA
     </div>
 
-    <AuthControls />
+    <div class="nav-controls">
+      <DarkModeToggle />
+      <AuthControls />
+    </div>
   </el-header>
 </template>
 
 <style scoped>
 .app-navbar {
   background-color: var(--el-bg-color-overlay);
-  border-bottom: 1px solid #e4e7ed;
+  border-bottom: 1px solid var(--app-border-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
 }
+
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 
 .logo {
   color: var(--el-color-primary);

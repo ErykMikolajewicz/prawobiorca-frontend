@@ -26,7 +26,7 @@ const { isUserLogged } = storeToRefs(authStore)
 const regulationId = ref((route.params.regulationId as string) || '')
 const regulationName = history.state.filename
 const searchParams = ref<searchParams>({query: (route.query.query as string) || '',
-  threshold: route.query.threshold !== undefined ? Number(route.query.threshold) : 0.7,
+  threshold: route.query.threshold !== undefined ? Number(route.query.threshold) : 0.2,
   limit: route.query.limit ? Number(route.query.limit) : undefined})
 
 const cases = ref<Array<caseData>>([])

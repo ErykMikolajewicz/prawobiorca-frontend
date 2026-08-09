@@ -42,8 +42,9 @@ defineProps<Props>()
 }
 
 .regulation-card:hover {
-  box-shadow: 0 4px 12px rgba(138, 43, 226, 0.12);
+  box-shadow: var(--app-card-shadow);
 }
+
 
 .card-content {
   display: flex;
@@ -74,8 +75,9 @@ defineProps<Props>()
 
 .regulation-card-link:hover {
   .regulation-card {
-    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.12);
+    box-shadow: var(--app-card-shadow);
   }
 }
+
 
 </style>
