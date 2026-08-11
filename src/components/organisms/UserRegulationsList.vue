@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import UserRegulationCard from '@/components/molecules/UserRegulationCard.vue'
-import RegulationCreationCard from '@/components/molecules/RegulationCreationCard.vue'
 import type {regulationRepresentation} from "@/types/api/regulations.ts"
 
 type Props = {
@@ -11,10 +10,6 @@ defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'user-regulation-deleted', regulationId: string): void
-  (
-    e: 'user-regulation-created',
-    file: regulationRepresentation
-  ): void
 }>()
 </script>
 
@@ -22,18 +17,19 @@ const emit = defineEmits<{
   <div class="user-files-container">
     <h2 class="section-title">Regulacje użytkownika</h2>
 
-    <div class="files-grid">
+    <div v-if="regulations.length" class="files-grid">
       <UserRegulationCard
         v-for="regulation in regulations"
         :key="regulation.id"
         :regulation="regulation"
         @deleted="(regulationId) => emit('user-regulation-deleted', regulationId)"
       />
-
-      <RegulationCreationCard
-        @regulation-created="(regulation) => emit('user-regulation-created', regulation)"
-      />
     </div>
+
+    <el-empty
+      v-else
+      description="Brak regulacji użytkownika."
+    />
   </div>
 </template>
 

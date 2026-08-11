@@ -7,6 +7,7 @@ import AppFooter from '@/components/organisms/AppFooter.vue'
 import PublicFilesList from '@/components/organisms/PublicRegulationsList.vue'
 import UserRegulationsList from '@/components/organisms/UserRegulationsList.vue'
 import UserCasesList from '@/components/organisms/UserCasesList.vue'
+import RegulationUploadDialog from '@/components/molecules/RegulationUploadDialog.vue'
 import { getPublicRegulations, getUserRegulations } from '@/api/regulations.ts'
 import type { regulationRepresentation } from '@/types/api/regulations.ts'
 import { getCases } from '@/api/cases.ts'
@@ -15,7 +16,7 @@ import type { caseData } from '@/types/api/cases.ts'
 import { useAuthStore } from '@/stores/auth'
 
 const authStore = useAuthStore()
-const { isUserLogged } = storeToRefs(authStore)
+const { isUserLogged, isAdmin } = storeToRefs(authStore)
 
 const publicRegulations = ref<Array<regulationRepresentation>>([])
 
@@ -23,12 +24,18 @@ const userRegulations = ref<Array<regulationRepresentation>>([])
 
 const cases = ref<Array<caseData>>([])
 
+const isUploadDialogVisible = ref(false)
+
 function handleCaseCreated(newCase: caseData) {
   cases.value.push(newCase)
 }
 
-function handleUserRegulationCreated(newFile: regulationRepresentation) {
-  userRegulations.value.push(newFile)
+function handleRegulationCreated(regulation: regulationRepresentation, target: 'user' | 'public') {
+  if (target === 'public') {
+    publicRegulations.value.push(regulation)
+  } else {
+    userRegulations.value.push(regulation)
+  }
 }
 
 function handleUserRegulationDeleted(regulationId: string) {
@@ -65,14 +72,17 @@ onBeforeMount(async () => {
     <AppNavbar />
 
     <main class="main-content">
+      <div v-if="isUserLogged" class="page-actions">
+        <el-button type="primary" @click="isUploadDialogVisible = true">Dodaj plik</el-button>
+      </div>
+
       <PublicFilesList :regulations="publicRegulations" />
 
       <el-divider />
 
       <template v-if="isUserLogged">
         <UserRegulationsList :regulations="userRegulations"
-                       @user-regulation-deleted="handleUserRegulationDeleted"
-                       @user-regulation-created="handleUserRegulationCreated"/>
+                       @user-regulation-deleted="handleUserRegulationDeleted"/>
 
         <el-divider />
 
@@ -83,6 +93,12 @@ onBeforeMount(async () => {
         />
       </template>
     </main>
+
+    <RegulationUploadDialog
+      v-model="isUploadDialogVisible"
+      :is-admin="isAdmin"
+      @created="handleRegulationCreated"
+    />
 
     <AppFooter />
   </div>
@@ -102,6 +118,12 @@ onBeforeMount(async () => {
   max-width: 1200px;
   box-sizing: border-box;
   overflow-x: hidden;
+}
+
+.page-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
 }
 
 @media (max-width: 768px) {

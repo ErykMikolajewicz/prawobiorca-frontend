@@ -1,6 +1,7 @@
 import {prawobiorcaClient} from '@/api/axios'
-import type {regulationRepresentation} from '@/types/api/regulations.ts'
+import type {regulationRepresentation, regulationType} from '@/types/api/regulations.ts'
 import type {searchParams, searchResult} from "@/types/api/search.ts"
+
 
 
 export async function getPublicRegulations(): Promise<Array<regulationRepresentation>> {
@@ -38,14 +39,19 @@ export async function getUserRegulations(): Promise<Array<regulationRepresentati
     }
 }
 
-export async function uploadRegulation(regulation: File): Promise<string> {
+export async function uploadUserRegulation(
+    regulation: File,
+    presentationName: string,
+    regulationType?: regulationType
+): Promise<string> {
     try {
         const formData = new FormData()
-        formData.append('regulation', regulation)
+        formData.append('regulation', regulation, presentationName)
         const response = await prawobiorcaClient.post('/user/regulations', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
-            }
+            },
+            params: regulationType ? { regulationType } : undefined
         })
 
         if (response.data) {
@@ -57,6 +63,32 @@ export async function uploadRegulation(regulation: File): Promise<string> {
         throw error
     }
 }
+
+export async function uploadPublicRegulation(
+    regulation: File,
+    presentationName: string,
+    regulationType?: regulationType
+): Promise<string> {
+    try {
+        const formData = new FormData()
+        formData.append('regulation', regulation, presentationName)
+        const response = await prawobiorcaClient.post('/regulations', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            },
+            params: regulationType ? { regulationType } : undefined
+        })
+
+        if (response.data) {
+            return response.data
+        }
+        throw new Error('Upload successful but no regulation id returned')
+    } catch (error) {
+        console.error('Failed to upload public regulation:', error)
+        throw error
+    }
+}
+
 
 export async function deleteUserRegulation(regulationId: string): Promise<void> {
     await prawobiorcaClient.delete(`/user/regulations/${regulationId}`)

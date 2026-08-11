@@ -5,14 +5,20 @@ import * as authApi from '@/api/auth'
 
 export const useAuthStore = defineStore('auth', () => {
   const isUserLogged = ref(false)
+  const isAdmin = ref(false)
 
   async function checkIsLogged(): Promise<void> {
-    isUserLogged.value = await authApi.isLogged()
+    const currentUser = await authApi.getCurrentUser()
+    isUserLogged.value = currentUser !== null
+    isAdmin.value = currentUser?.isAdmin ?? false
   }
 
    async function login(username: string, password: string): Promise<void> {
       await authApi.login(username, password)
       isUserLogged.value = true
+
+      const currentUser = await authApi.getCurrentUser()
+      isAdmin.value = currentUser?.isAdmin ?? false
   }
 
   async function logout() {
@@ -20,8 +26,9 @@ export const useAuthStore = defineStore('auth', () => {
       await authApi.logout()
     } finally {
       isUserLogged.value = false
+      isAdmin.value = false
     }
   }
 
-  return { isUserLogged, checkIsLogged, login, logout}
+  return { isUserLogged, isAdmin, checkIsLogged, login, logout}
 })
