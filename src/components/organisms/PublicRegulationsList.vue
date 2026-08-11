@@ -1,19 +1,33 @@
 <script setup lang="ts">
 import PublicRegulationCard from '@/components/molecules/PublicRegulationCard.vue'
-import type {regulationRepresentation} from '@/types/api/regulations.ts'
+import RegulationTypeFilter from '@/components/molecules/RegulationTypeFilter.vue'
+import type {regulationRepresentation, regulationType} from '@/types/api/regulations.ts'
 
 type Props = {
   regulations: Array<regulationRepresentation>
+  typeFilter: regulationType | undefined
 }
 
 defineProps<Props>()
+
+const emit = defineEmits<{
+  (e: 'update:typeFilter', value: regulationType | undefined): void
+}>()
 </script>
 
 <template>
   <div class="public-regulations-container">
     <h2 class="section-title">Publiczne regulacje</h2>
 
+    <div class="filter-row">
+      <RegulationTypeFilter
+        :model-value="typeFilter"
+        @update:model-value="(value) => emit('update:typeFilter', value)"
+      />
+    </div>
+
     <div v-if="regulations.length" class="files-grid">
+
       <PublicRegulationCard
         v-for="regulation in regulations"
         :key="regulation.id"
@@ -43,6 +57,12 @@ defineProps<Props>()
   padding-left: 12px;
   border-left: 4px solid var(--el-color-primary);
 }
+
+.filter-row {
+  display: flex;
+  justify-content: flex-start;
+}
+
 
 .files-grid {
   display: grid;

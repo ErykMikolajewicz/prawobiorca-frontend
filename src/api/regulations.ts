@@ -4,9 +4,13 @@ import type {searchParams, searchResult} from "@/types/api/search.ts"
 
 
 
-export async function getPublicRegulations(): Promise<Array<regulationRepresentation>> {
+export async function getPublicRegulations(
+    documentType?: regulationType
+): Promise<Array<regulationRepresentation>> {
     try {
-        const response = await prawobiorcaClient.get('/regulations')
+        const response = await prawobiorcaClient.get('/regulations', {
+            params: documentType ? { documentType } : undefined
+        })
         if (response.status == 204) {
             return []
         }
@@ -22,9 +26,13 @@ export async function getPublicRegulations(): Promise<Array<regulationRepresenta
 }
 
 
-export async function getUserRegulations(): Promise<Array<regulationRepresentation>> {
+export async function getUserRegulations(
+    documentType?: regulationType
+): Promise<Array<regulationRepresentation>> {
     try {
-        const response = await prawobiorcaClient.get('/user/regulations')
+        const response = await prawobiorcaClient.get('/user/regulations', {
+            params: documentType ? { documentType } : undefined
+        })
         if (response.status == 204) {
             return []
         }
@@ -38,6 +46,7 @@ export async function getUserRegulations(): Promise<Array<regulationRepresentati
         return []
     }
 }
+
 
 export async function uploadUserRegulation(
     regulation: File,

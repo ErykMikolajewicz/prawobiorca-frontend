@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, watch } from 'vue'
+
 import { storeToRefs } from 'pinia'
 
 import AppNavbar from '@/components/organisms/AppNavbar.vue'
@@ -9,7 +10,8 @@ import UserRegulationsList from '@/components/organisms/UserRegulationsList.vue'
 import UserCasesList from '@/components/organisms/UserCasesList.vue'
 import RegulationUploadDialog from '@/components/molecules/RegulationUploadDialog.vue'
 import { getPublicRegulations, getUserRegulations } from '@/api/regulations.ts'
-import type { regulationRepresentation } from '@/types/api/regulations.ts'
+
+import type { regulationRepresentation, regulationType } from '@/types/api/regulations.ts'
 import { getCases } from '@/api/cases.ts'
 import type { caseData } from '@/types/api/cases.ts'
 
@@ -25,6 +27,9 @@ const userRegulations = ref<Array<regulationRepresentation>>([])
 const cases = ref<Array<caseData>>([])
 
 const isUploadDialogVisible = ref(false)
+
+const publicRegulationTypeFilter = ref<regulationType | undefined>(undefined)
+const userRegulationTypeFilter = ref<regulationType | undefined>(undefined)
 
 function handleCaseCreated(newCase: caseData) {
   cases.value.push(newCase)
@@ -46,26 +51,42 @@ function handleCaseDeleted(caseId: string) {
   cases.value = cases.value.filter((c) => c.id !== caseId)
 }
 
-onBeforeMount(async () => {
+async function fetchPublicRegulations() {
   try {
-    publicRegulations.value = await getPublicRegulations()
+    publicRegulations.value = await getPublicRegulations(publicRegulationTypeFilter.value)
   } catch (error) {
     console.error('Failed to fetch public files:', error)
     publicRegulations.value = []
   }
+}
+
+async function fetchUserRegulations() {
+  try {
+    userRegulations.value = await getUserRegulations(userRegulationTypeFilter.value)
+  } catch (error) {
+    console.error('Failed to fetch user regulations:', error)
+    userRegulations.value = []
+  }
+}
+
+watch(publicRegulationTypeFilter, fetchPublicRegulations)
+watch(userRegulationTypeFilter, fetchUserRegulations)
+
+onBeforeMount(async () => {
+  await fetchPublicRegulations()
 
   if (isUserLogged.value) {
     try {
-      userRegulations.value = await getUserRegulations()
+      await fetchUserRegulations()
       cases.value = await getCases()
     } catch (error) {
       console.error('Failed to fetch user data:', error)
-      userRegulations.value = []
       cases.value = []
     }
   }
 })
 </script>
+
 
 <template>
   <div class="page-container">
@@ -76,13 +97,23 @@ onBeforeMount(async () => {
         <el-button type="primary" @click="isUploadDialogVisible = true">Dodaj plik</el-button>
       </div>
 
-      <PublicFilesList :regulations="publicRegulations" />
+      <PublicFilesList
+        :regulations="publicRegulations"
+        :type-filter="publicRegulationTypeFilter"
+        @update:type-filter="(value) => (publicRegulationTypeFilter = value)"
+      />
 
       <el-divider />
 
       <template v-if="isUserLogged">
-        <UserRegulationsList :regulations="userRegulations"
-                       @user-regulation-deleted="handleUserRegulationDeleted"/>
+        <UserRegulationsList
+          :regulations="userRegulations"
+          :type-filter="userRegulationTypeFilter"
+          @update:type-filter="(value) => (userRegulationTypeFilter = value)"
+          @user-regulation-deleted="handleUserRegulationDeleted"
+        />
+
+
 
         <el-divider />
 
@@ -125,6 +156,7 @@ onBeforeMount(async () => {
   justify-content: flex-end;
   margin-bottom: 1rem;
 }
+
 
 @media (max-width: 768px) {
   .main-content {

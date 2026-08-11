@@ -1,15 +1,18 @@
 <script setup lang="ts">
 import UserRegulationCard from '@/components/molecules/UserRegulationCard.vue'
-import type {regulationRepresentation} from "@/types/api/regulations.ts"
+import RegulationTypeFilter from '@/components/molecules/RegulationTypeFilter.vue'
+import type {regulationRepresentation, regulationType} from "@/types/api/regulations.ts"
 
 type Props = {
   regulations: Array<regulationRepresentation>
+  typeFilter: regulationType | undefined
 }
 
 defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'user-regulation-deleted', regulationId: string): void
+  (e: 'update:typeFilter', value: regulationType | undefined): void
 }>()
 </script>
 
@@ -17,7 +20,15 @@ const emit = defineEmits<{
   <div class="user-files-container">
     <h2 class="section-title">Regulacje użytkownika</h2>
 
+    <div class="filter-row">
+      <RegulationTypeFilter
+        :model-value="typeFilter"
+        @update:model-value="(value) => emit('update:typeFilter', value)"
+      />
+    </div>
+
     <div v-if="regulations.length" class="files-grid">
+
       <UserRegulationCard
         v-for="regulation in regulations"
         :key="regulation.id"
@@ -48,6 +59,12 @@ const emit = defineEmits<{
   padding-left: 12px;
   border-left: 4px solid var(--el-color-primary);
 }
+
+.filter-row {
+  display: flex;
+  justify-content: flex-start;
+}
+
 
 .files-grid {
   display: grid;
