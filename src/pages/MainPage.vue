@@ -47,6 +47,11 @@ function handleUserRegulationDeleted(regulationId: string) {
   userRegulations.value = userRegulations.value.filter((regulation) => regulation.id !== regulationId)
 }
 
+function handlePublicRegulationDeleted(regulationId: string) {
+  publicRegulations.value = publicRegulations.value.filter((regulation) => regulation.id !== regulationId)
+}
+
+
 function handleCaseDeleted(caseId: string) {
   cases.value = cases.value.filter((c) => c.id !== caseId)
 }
@@ -100,8 +105,11 @@ onBeforeMount(async () => {
       <PublicFilesList
         :regulations="publicRegulations"
         :type-filter="publicRegulationTypeFilter"
+        :is-admin="isAdmin"
         @update:type-filter="(value) => (publicRegulationTypeFilter = value)"
+        @regulation-deleted="handlePublicRegulationDeleted"
       />
+
 
       <el-divider />
 

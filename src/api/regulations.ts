@@ -5,12 +5,13 @@ import type {searchParams, searchResult} from "@/types/api/search.ts"
 
 
 export async function getPublicRegulations(
-    documentType?: regulationType
+    regulationType?: regulationType
 ): Promise<Array<regulationRepresentation>> {
     try {
         const response = await prawobiorcaClient.get('/regulations', {
-            params: documentType ? { documentType } : undefined
+            params: regulationType ? { documentType: regulationType } : undefined
         })
+
         if (response.status == 204) {
             return []
         }
@@ -27,12 +28,13 @@ export async function getPublicRegulations(
 
 
 export async function getUserRegulations(
-    documentType?: regulationType
+    regulationType?: regulationType
 ): Promise<Array<regulationRepresentation>> {
     try {
         const response = await prawobiorcaClient.get('/user/regulations', {
-            params: documentType ? { documentType } : undefined
+            params: regulationType ? { documentType: regulationType } : undefined
         })
+
         if (response.status == 204) {
             return []
         }
@@ -103,6 +105,13 @@ export async function deleteUserRegulation(regulationId: string): Promise<void> 
     await prawobiorcaClient.delete(`/user/regulations/${regulationId}`)
 
 }
+
+
+export async function deletePublicRegulation(regulationId: string): Promise<void> {
+    await prawobiorcaClient.delete(`/regulations/${regulationId}`)
+
+}
+
 
 
 export async function prepareUserRegulation(regulationId: string): Promise<void> {

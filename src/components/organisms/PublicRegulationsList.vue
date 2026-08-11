@@ -6,12 +6,14 @@ import type {regulationRepresentation, regulationType} from '@/types/api/regulat
 type Props = {
   regulations: Array<regulationRepresentation>
   typeFilter: regulationType | undefined
+  isAdmin?: boolean
 }
 
 defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'update:typeFilter', value: regulationType | undefined): void
+  (e: 'regulation-deleted', regulationId: string): void
 }>()
 </script>
 
@@ -32,6 +34,8 @@ const emit = defineEmits<{
         v-for="regulation in regulations"
         :key="regulation.id"
         :regulation="regulation"
+        :is-admin="isAdmin"
+        @deleted="(regulationId) => emit('regulation-deleted', regulationId)"
       />
     </div>
 

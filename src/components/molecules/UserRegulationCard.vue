@@ -6,7 +6,9 @@ import SearchRoundedIcon from '@iconify-vue/material-symbols/search-rounded'
 import DeleteOutlineRoundedIcon from '@iconify-vue/material-symbols/delete-outline-rounded'
 import SettingsIcon from '@iconify-vue/material-symbols/settings-rounded'
 import IconMotion from '@/components/atoms/IconMotion.vue'
+import RegulationTypeBadge from '@/components/atoms/RegulationTypeBadge.vue'
 import type { regulationRepresentation } from "@/types/api/regulations.ts"
+
 
 type Props = {
   regulation: regulationRepresentation
@@ -60,13 +62,16 @@ async function prepareRegulation(regulationId: string) {
     :class="regulation.isPrepared ? 'file-card-link' : ''"
   >
     <el-card shadow="hover" class="file-card">
+      <RegulationTypeBadge :regulation-type="regulation.regulationType" class="type-badge" />
       <div class="card-content">
         <div class="regulation-info">
           <span class="regulation-name" :title="regulation.presentationName">{{
             regulation.presentationName
           }}</span>
         </div>
+
         <div class="actions">
+
           <span v-if="regulation.isPrepared">
             <IconMotion motion-type="search">
               <SearchRoundedIcon />
@@ -103,11 +108,13 @@ async function prepareRegulation(regulationId: string) {
 
 <style scoped>
 .file-card {
+  position: relative;
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
   height: 100%;
 }
+
 
 .file-card:hover {
   box-shadow: var(--app-card-shadow);
@@ -119,7 +126,9 @@ async function prepareRegulation(regulationId: string) {
   justify-content: space-between;
   align-items: center;
   gap: 16px;
+  margin-top: 18px;
 }
+
 
 .regulation-info {
   flex: 1;
@@ -131,6 +140,15 @@ async function prepareRegulation(regulationId: string) {
   font-weight: 500;
   color: var(--el-text-color-primary);
 }
+
+.type-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+}
+
+
 
 .file-card-link {
   display: block;

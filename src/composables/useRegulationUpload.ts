@@ -63,10 +63,12 @@ export function useRegulationUpload() {
         regulation: {
           id: regulationId,
           presentationName: presentationName.value.trim(),
-          isPrepared: false
+          isPrepared: false,
+          regulationType: regulationTypeValue
         },
         target: target.value
       }
+
     } catch {
       ElMessage.error('Wystąpił błąd podczas dodawania pliku.')
       return null
