@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { deleteUserRegulation, prepareUserRegulation } from '@/api/regulations'
 import { ElMessage } from 'element-plus'
 import SearchRoundedIcon from '@iconify-vue/material-symbols/search-rounded'
@@ -18,9 +18,18 @@ const props = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'deleted', regulationId: string): void
+  (e: 'prepared', regulationId: string): void
 }>()
 
 const isDeleting = ref(false)
+const isPrepared = ref(props.regulation.isPrepared)
+
+watch(
+  () => props.regulation.isPrepared,
+  (newVal) => {
+    isPrepared.value = newVal
+  }
+)
 
 async function handleDelete() {
   try {
@@ -39,9 +48,11 @@ async function handleDelete() {
 async function prepareRegulation(regulationId: string) {
   try {
     await prepareUserRegulation(regulationId)
+    isPrepared.value = true
     ElMessage.success('Regulacja została przygotowana')
-
+    emit('prepared', regulationId)
   } catch (error) {
+    ElMessage.error('Nie udało się przygotować regulacji')
     console.error('Nie udało się przygotować regulacji', error)
   }
 }
@@ -49,9 +60,9 @@ async function prepareRegulation(regulationId: string) {
 
 <template>
   <component
-    :is="regulation.isPrepared ? 'router-link' : 'div'"
+    :is="isPrepared ? 'router-link' : 'div'"
     :to="
-      regulation.isPrepared
+      isPrepared
         ? {
             name: 'SearchUserRegulation',
             params: { regulationId: regulation.id },
@@ -59,7 +70,7 @@ async function prepareRegulation(regulationId: string) {
           }
         : undefined
     "
-    :class="regulation.isPrepared ? 'file-card-link' : ''"
+    :class="isPrepared ? 'file-card-link' : ''"
   >
     <el-card shadow="hover" class="file-card">
       <RegulationTypeBadge :regulation-type="regulation.regulationType" class="type-badge" />
@@ -72,7 +83,7 @@ async function prepareRegulation(regulationId: string) {
 
         <div class="actions">
 
-          <span v-if="regulation.isPrepared">
+          <span v-if="isPrepared">
             <IconMotion motion-type="search">
               <SearchRoundedIcon />
             </IconMotion>

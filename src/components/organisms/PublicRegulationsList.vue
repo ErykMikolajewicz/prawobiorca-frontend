@@ -1,7 +1,8 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import PublicRegulationCard from '@/components/molecules/PublicRegulationCard.vue'
 import RegulationTypeFilter from '@/components/molecules/RegulationTypeFilter.vue'
-import type {regulationRepresentation, regulationType} from '@/types/api/regulations.ts'
+import type { regulationRepresentation, regulationType } from '@/types/api/regulations.ts'
 
 type Props = {
   regulations: Array<regulationRepresentation>
@@ -9,12 +10,19 @@ type Props = {
   isAdmin?: boolean
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'update:typeFilter', value: regulationType | undefined): void
   (e: 'regulation-deleted', regulationId: string): void
 }>()
+
+const displayedRegulations = computed(() => {
+  if (props.isAdmin) {
+    return props.regulations
+  }
+  return props.regulations.filter((regulation) => regulation.isPrepared)
+})
 </script>
 
 <template>
@@ -28,10 +36,9 @@ const emit = defineEmits<{
       />
     </div>
 
-    <div v-if="regulations.length" class="files-grid">
-
+    <div v-if="displayedRegulations.length" class="files-grid">
       <PublicRegulationCard
-        v-for="regulation in regulations"
+        v-for="regulation in displayedRegulations"
         :key="regulation.id"
         :regulation="regulation"
         :is-admin="isAdmin"

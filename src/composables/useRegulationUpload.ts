@@ -64,6 +64,7 @@ export function useRegulationUpload() {
           id: regulationId,
           presentationName: presentationName.value.trim(),
           isPrepared: false,
+          isUploaded: true,
           regulationType: regulationTypeValue
         },
         target: target.value

@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { deletePublicRegulation } from '@/api/regulations'
+import { ref, watch } from 'vue'
+import { deletePublicRegulation, preparePublicRegulation } from '@/api/regulations'
 import { ElMessage } from 'element-plus'
 import type { regulationRepresentation } from '@/types/api/regulations.ts'
 import SearchRoundedIcon from '@iconify-vue/material-symbols/search-rounded'
 import DeleteOutlineRoundedIcon from '@iconify-vue/material-symbols/delete-outline-rounded'
+import SettingsIcon from '@iconify-vue/material-symbols/settings-rounded'
 import IconMotion from '@/components/atoms/IconMotion.vue'
 import RegulationTypeBadge from '@/components/atoms/RegulationTypeBadge.vue'
 
@@ -17,9 +18,18 @@ const props = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'deleted', regulationId: string): void
+  (e: 'prepared', regulationId: string): void
 }>()
 
 const isDeleting = ref(false)
+const isPrepared = ref(props.regulation.isPrepared)
+
+watch(
+  () => props.regulation.isPrepared,
+  (newVal) => {
+    isPrepared.value = newVal
+  }
+)
 
 async function handleDelete() {
   try {
@@ -34,71 +44,94 @@ async function handleDelete() {
     isDeleting.value = false
   }
 }
+
+async function prepareRegulation(regulationId: string) {
+  try {
+    await preparePublicRegulation(regulationId)
+    isPrepared.value = true
+    ElMessage.success('Regulacja została przygotowana')
+    emit('prepared', regulationId)
+  } catch (error) {
+    ElMessage.error('Nie udało się przygotować regulacji')
+    console.error('Nie udało się przygotować regulacji', error)
+  }
+}
 </script>
 
 <template>
-  <div class="regulation-card-wrapper">
-    <router-link
-      :to="{
-        name: 'SearchPublicRegulation',
-        params: { regulationId: regulation.id },
-        state: { filename: regulation.presentationName }
-      }"
-      class="regulation-card-link"
-    >
-      <el-card shadow="hover" class="regulation-card">
-        <RegulationTypeBadge :regulation-type="regulation.regulationType" class="type-badge" />
-        <div class="card-content">
-          <div class="regulation-info">
-            <span class="file-name" :title="regulation.presentationName">{{
-                regulation.presentationName
-              }}</span>
-          </div>
-          <div class="actions">
+  <component
+    :is="isPrepared ? 'router-link' : 'div'"
+    :to="
+      isPrepared
+        ? {
+            name: 'SearchPublicRegulation',
+            params: { regulationId: regulation.id },
+            state: { filename: regulation.presentationName }
+          }
+        : undefined
+    "
+    :class="isPrepared ? 'file-card-link' : ''"
+  >
+    <el-card shadow="hover" class="file-card">
+      <RegulationTypeBadge :regulation-type="regulation.regulationType" class="type-badge" />
+      <div class="card-content">
+        <div class="regulation-info">
+          <span class="regulation-name" :title="regulation.presentationName">{{
+            regulation.presentationName
+          }}</span>
+        </div>
+        <div class="actions">
+          <span v-if="isPrepared">
             <IconMotion motion-type="search">
               <SearchRoundedIcon />
             </IconMotion>
+          </span>
 
-            <el-popconfirm
-              v-if="isAdmin"
-              title="Czy na pewno chcesz usunąć tę regulację?"
-              confirm-button-text="Tak"
-              cancel-button-text="Nie"
-              @confirm="handleDelete"
-            >
-              <template #reference>
-                <button
-                  class="icon-btn icon-btn-danger"
-                  :disabled="isDeleting"
-                  @click.prevent.stop
-                >
-                  <DeleteOutlineRoundedIcon />
-                </button>
-              </template>
-            </el-popconfirm>
-          </div>
+          <form
+            v-else-if="isAdmin"
+            class="form-action"
+            @submit.prevent="prepareRegulation(regulation.id)"
+          >
+            <button class="icon-btn" type="submit">
+              <SettingsIcon />
+            </button>
+          </form>
+
+          <el-popconfirm
+            v-if="isAdmin"
+            title="Czy na pewno chcesz usunąć tę regulację?"
+            confirm-button-text="Tak"
+            cancel-button-text="Nie"
+            @confirm="handleDelete"
+          >
+            <template #reference>
+              <button
+                class="icon-btn icon-btn-danger"
+                :disabled="isDeleting"
+                @click.prevent.stop
+              >
+                <DeleteOutlineRoundedIcon />
+              </button>
+            </template>
+          </el-popconfirm>
         </div>
-      </el-card>
-    </router-link>
-  </div>
+      </div>
+    </el-card>
+  </component>
 </template>
 
 <style scoped>
-.regulation-card-wrapper {
-  position: relative;
-}
-
-.regulation-card {
+.file-card {
   position: relative;
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
+  height: 100%;
 }
 
-.regulation-card:hover {
+.file-card:hover {
   box-shadow: var(--app-card-shadow);
 }
-
 
 .card-content {
   display: flex;
@@ -113,11 +146,8 @@ async function handleDelete() {
   min-width: 0;
 }
 
-.file-name {
+.regulation-name {
   display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   font-weight: 500;
   color: var(--el-text-color-primary);
 }
@@ -129,11 +159,20 @@ async function handleDelete() {
   z-index: 1;
 }
 
-.actions {
-  display: flex;
-  gap: 8px;
-  flex-shrink: 0;
-  align-items: center;
+.file-card-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.file-card-link:hover {
+  .file-card {
+    box-shadow: var(--app-card-shadow);
+  }
+
+  :deep(.icon-btn) {
+    color: var(--el-color-primary);
+  }
 }
 
 .icon-btn {
@@ -156,15 +195,17 @@ async function handleDelete() {
   cursor: not-allowed;
 }
 
-.regulation-card-link {
-  display: block;
-  color: inherit;
-  text-decoration: none;
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+  align-items: center;
 }
 
-.regulation-card-link:hover {
-  .regulation-card {
-    box-shadow: var(--app-card-shadow);
-  }
+.form-action {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
 }
 </style>
