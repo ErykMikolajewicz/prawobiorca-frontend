@@ -7,7 +7,7 @@ describe('App', () => {
   it('mounts properly', async () => {
     const router = createRouter({
       history: createMemoryHistory(),
-      routes: [{ path: '/', component: { template: '<div>Home</div>' } }]
+      routes: [{ path: '/', component: { template: '<div>Home</div>' } }],
     })
 
     router.push('/')
@@ -15,10 +15,9 @@ describe('App', () => {
 
     const wrapper = mount(App, {
       global: {
-        plugins: [router]
-      }
+        plugins: [router],
+      },
     })
     expect(wrapper.exists()).toBe(true)
   })
 })
-

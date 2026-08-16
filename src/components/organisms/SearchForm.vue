@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 
-import type {searchParams} from "@/types/api/search.ts"
+import type { searchParams } from '@/types/api/search.ts'
 
 const props = defineProps<{
   searchParams: searchParams
@@ -13,12 +13,12 @@ const emit = defineEmits<{
 
 const searchParams = reactive<searchParams>({
   ...props.searchParams,
-  threshold: props.searchParams.threshold ?? 0.2
+  threshold: props.searchParams.threshold ?? 0.2,
 })
 
-function onSubmit(){
+function onSubmit() {
   if (searchParams.query.trim()) {
-    emit('search', {...searchParams})
+    emit('search', { ...searchParams })
   }
 }
 </script>
@@ -26,32 +26,31 @@ function onSubmit(){
 <template>
   <el-form @submit.prevent="onSubmit">
     <el-form-item label="Twoje zapytanie:">
-      <el-input
-        v-model="searchParams.query"
-        placeholder="Wpisz treść..."
-        clearable
-        required
-      />
+      <el-input v-model="searchParams.query" placeholder="Wpisz treść..." clearable required />
     </el-form-item>
     <el-row :gutter="20">
       <el-col :span="12">
         <el-form-item label="Poziom istotności:">
-          <div style="display: flex; align-items: center; gap: 15px; width: 100%;">
+          <div style="display: flex; align-items: center; gap: 15px; width: 100%">
             <el-slider
               v-model="searchParams.threshold"
               :min="-1"
               :max="1"
               :step="0.1"
               :show-tooltip="false"
-              style="flex: 1;"
+              style="flex: 1"
             />
             <span
-              style="color: var(--el-text-color-primary); min-width: 40px; text-align: center; font-weight: 500;"
+              style="
+                color: var(--el-text-color-primary);
+                min-width: 40px;
+                text-align: center;
+                font-weight: 500;
+              "
             >
               {{ searchParams.threshold.toFixed(1) }}
             </span>
           </div>
-
         </el-form-item>
       </el-col>
       <el-col :span="12">

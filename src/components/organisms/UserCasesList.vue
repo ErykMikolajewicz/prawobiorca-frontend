@@ -30,9 +30,7 @@ const emit = defineEmits<{
         @deleted="(id) => emit('case-deleted', id)"
       />
 
-      <CaseCreationCard
-        @case-created="(newCase) => emit('case-created', newCase)"
-      />
+      <CaseCreationCard @case-created="(newCase) => emit('case-created', newCase)" />
     </div>
   </div>
 </template>
@@ -58,5 +56,4 @@ const emit = defineEmits<{
   gap: 1rem;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
 }
-
 </style>

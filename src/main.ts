@@ -12,7 +12,6 @@ import router from './router'
 
 useDarkMode()
 
-
 const app = createApp(App)
 const pinia = createPinia()
 

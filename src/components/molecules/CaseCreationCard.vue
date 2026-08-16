@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import Add2RoundedIcon from '@iconify-vue/material-symbols/add-2-rounded'
-import {addCase} from '@/api/cases'
+import { addCase } from '@/api/cases'
 
 const newCaseName = ref('')
 const inputRef = ref<HTMLInputElement>()
@@ -22,14 +22,14 @@ async function createCase() {
   const caseId: string = await addCase(newCaseName.value)
   const newCase = {
     id: caseId,
-    name: newCaseName.value.trim()
+    name: newCaseName.value.trim(),
   }
   emit('case-created', newCase)
   newCaseName.value = ''
 }
 
 defineExpose({
-  triggerInput
+  triggerInput,
 })
 </script>
 

@@ -44,13 +44,16 @@ function handleRegulationCreated(regulation: regulationRepresentation, target: '
 }
 
 function handleUserRegulationDeleted(regulationId: string) {
-  userRegulations.value = userRegulations.value.filter((regulation) => regulation.id !== regulationId)
+  userRegulations.value = userRegulations.value.filter(
+    (regulation) => regulation.id !== regulationId,
+  )
 }
 
 function handlePublicRegulationDeleted(regulationId: string) {
-  publicRegulations.value = publicRegulations.value.filter((regulation) => regulation.id !== regulationId)
+  publicRegulations.value = publicRegulations.value.filter(
+    (regulation) => regulation.id !== regulationId,
+  )
 }
-
 
 function handleCaseDeleted(caseId: string) {
   cases.value = cases.value.filter((c) => c.id !== caseId)
@@ -92,7 +95,6 @@ onBeforeMount(async () => {
 })
 </script>
 
-
 <template>
   <div class="page-container">
     <AppNavbar />
@@ -110,7 +112,6 @@ onBeforeMount(async () => {
         @regulation-deleted="handlePublicRegulationDeleted"
       />
 
-
       <el-divider />
 
       <template v-if="isUserLogged">
@@ -120,8 +121,6 @@ onBeforeMount(async () => {
           @update:type-filter="(value) => (userRegulationTypeFilter = value)"
           @user-regulation-deleted="handleUserRegulationDeleted"
         />
-
-
 
         <el-divider />
 
@@ -164,7 +163,6 @@ onBeforeMount(async () => {
   justify-content: flex-end;
   margin-bottom: 1rem;
 }
-
 
 @media (max-width: 768px) {
   .main-content {

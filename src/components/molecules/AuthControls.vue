@@ -17,20 +17,9 @@ async function handleLogout() {
 
 <template>
   <div class="auth-controls">
-    <el-button
-      v-if="authStore.isUserLogged"
-      @click="handleLogout"
-    >
-      Wyloguj się
-    </el-button>
+    <el-button v-if="authStore.isUserLogged" @click="handleLogout"> Wyloguj się </el-button>
 
-    <el-button
-      v-else
-      type="primary"
-      @click="handleLogin"
-    >
-      Zaloguj się
-    </el-button>
+    <el-button v-else type="primary" @click="handleLogin"> Zaloguj się </el-button>
   </div>
 </template>
 

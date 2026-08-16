@@ -94,5 +94,4 @@ const handleAddToCase = () => {
   display: inline-block;
   cursor: not-allowed;
 }
-
 </style>

@@ -25,19 +25,19 @@ const handleCaseSelect = (caseId: string) => {
 </script>
 
 <template>
-    <el-form-item v-if="isUserLogged" label="Bieżąca sprawa:">
-      <el-select
-        v-model="currentCaseId"
-        placeholder="-- Wybierz z listy --"
-        @change="handleCaseSelect"
-        clearable
-      >
-        <el-option
-          v-for="userCase in cases"
-          :key="userCase.id"
-          :label="userCase.name"
-          :value="userCase.id"
-        />
-      </el-select>
-    </el-form-item>
+  <el-form-item v-if="isUserLogged" label="Bieżąca sprawa:">
+    <el-select
+      v-model="currentCaseId"
+      placeholder="-- Wybierz z listy --"
+      @change="handleCaseSelect"
+      clearable
+    >
+      <el-option
+        v-for="userCase in cases"
+        :key="userCase.id"
+        :label="userCase.name"
+        :value="userCase.id"
+      />
+    </el-select>
+  </el-form-item>
 </template>

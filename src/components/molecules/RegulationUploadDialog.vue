@@ -25,7 +25,7 @@ const {
   isSubmitting,
   resetForm,
   setFile,
-  submit
+  submit,
 } = useRegulationUpload()
 
 watch(
@@ -34,7 +34,7 @@ watch(
     if (visible) {
       resetForm()
     }
-  }
+  },
 )
 
 function closeDialog() {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import PinnedDocument from '@/components/molecules/PinnedDocument.vue'
-import type {DocumentData} from "@/types/api/documents.ts"
+import type { DocumentData } from '@/types/api/documents.ts'
 
 defineProps<{ documents: Array<DocumentData> }>()
 
@@ -14,15 +14,15 @@ const handleUnpin = (id: string) => {
 </script>
 
 <template>
-    <div v-if="documents.length > 0">
-      <PinnedDocument
-        v-for="document in documents"
-        :key="document.id"
-        :document="document"
-        @unpin="handleUnpin"
-      />
-    </div>
-    <div v-else>
-      <el-empty description="Brak przypiętych artykułów do tej sprawy." />
-    </div>
+  <div v-if="documents.length > 0">
+    <PinnedDocument
+      v-for="document in documents"
+      :key="document.id"
+      :document="document"
+      @unpin="handleUnpin"
+    />
+  </div>
+  <div v-else>
+    <el-empty description="Brak przypiętych artykułów do tej sprawy." />
+  </div>
 </template>

@@ -9,7 +9,7 @@ const authStore = useAuthStore()
 
 const form = reactive({
   username: '',
-  password: ''
+  password: '',
 })
 
 const errorMessage = ref('')

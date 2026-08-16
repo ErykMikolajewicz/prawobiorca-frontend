@@ -8,7 +8,7 @@ export type uploadTarget = 'user' | 'public'
 export const regulationTypeOptions: Array<{ label: string; value: regulationType }> = [
   { label: 'Ustawa', value: 'ACT' },
   { label: 'Rozporządzenie', value: 'DECREE' },
-  { label: 'Regulamin', value: 'STATUTE' }
+  { label: 'Regulamin', value: 'STATUTE' },
 ]
 
 export function useRegulationUpload() {
@@ -54,7 +54,7 @@ export function useRegulationUpload() {
       const regulationId = await uploadFn(
         selectedFile.value,
         presentationName.value.trim(),
-        regulationTypeValue
+        regulationTypeValue,
       )
 
       ElMessage.success('Plik został pomyślnie dodany.')
@@ -65,11 +65,10 @@ export function useRegulationUpload() {
           presentationName: presentationName.value.trim(),
           isPrepared: false,
           isUploaded: true,
-          regulationType: regulationTypeValue
+          regulationType: regulationTypeValue,
         },
-        target: target.value
+        target: target.value,
       }
-
     } catch {
       ElMessage.error('Wystąpił błąd podczas dodawania pliku.')
       return null
@@ -86,6 +85,6 @@ export function useRegulationUpload() {
     isSubmitting,
     resetForm,
     setFile,
-    submit
+    submit,
   }
 }

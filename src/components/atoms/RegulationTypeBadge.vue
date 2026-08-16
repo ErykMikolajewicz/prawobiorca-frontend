@@ -15,7 +15,6 @@ const label = computed(() => {
   }
   return regulationTypeOptions.find((option) => option.value === props.regulationType)?.label
 })
-
 </script>
 
 <template>

@@ -55,4 +55,3 @@ function handleChange(value: regulationType | '' | undefined) {
   width: 220px;
 }
 </style>
-

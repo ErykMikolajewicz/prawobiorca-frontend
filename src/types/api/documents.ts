@@ -1,3 +1,1 @@
-export type DocumentData = {id: string,
-  content: string,
-  presentationName: string}
+export type DocumentData = { id: string; content: string; presentationName: string }

@@ -12,8 +12,8 @@ import GeneratePdfForm from '@/components/organisms/GeneratePdfForm.vue'
 
 import { getCaseDocuments, unpinDocument, generatePdf } from '@/api/cases.ts'
 
-import type {DocumentData} from "@/types/api/documents.ts"
-import {ArrowLeft} from "@element-plus/icons-vue"
+import type { DocumentData } from '@/types/api/documents.ts'
+import { ArrowLeft } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -53,7 +53,7 @@ const handleGeneratePdf = async (description: string) => {
         <el-icon><ArrowLeft /></el-icon> Powrót do głównego ekranu
       </el-button>
 
-    <h1>Szczegóły Sprawy</h1>
+      <h1>Szczegóły Sprawy</h1>
 
       <el-row>
         <el-col :span="12" :xs="24">
@@ -71,7 +71,7 @@ const handleGeneratePdf = async (description: string) => {
       </el-row>
     </main>
 
-  <AppFooter />
+    <AppFooter />
   </div>
 </template>
 

@@ -15,7 +15,7 @@ export async function login(username: string, password: string): Promise<void> {
   params.append('password', password)
 
   await prawobiorcaClient.post('/auth/login', params, {
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
   })
 }
 
@@ -23,8 +23,7 @@ export async function isLogged(): Promise<boolean> {
   try {
     await prawobiorcaClient.get('/auth/me')
     return true
-  }
-  catch (error: unknown) {
+  } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) {
         return false
@@ -38,8 +37,7 @@ export async function getCurrentUser(): Promise<currentUser | null> {
   try {
     const response = await prawobiorcaClient.get('/auth/me')
     return response.data
-  }
-  catch (error: unknown) {
+  } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) {
         return null
@@ -48,4 +46,3 @@ export async function getCurrentUser(): Promise<currentUser | null> {
     throw error
   }
 }
-

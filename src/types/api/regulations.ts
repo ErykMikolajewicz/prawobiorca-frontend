@@ -1,4 +1,3 @@
-
 export type regulationType = 'ACT' | 'DECREE' | 'STATUTE'
 
 export type regulationRepresentation = {
@@ -19,7 +18,3 @@ export type regulationUploadTarget = {
   url: string
   fields: Record<string, string>
 }
-
-
-
-

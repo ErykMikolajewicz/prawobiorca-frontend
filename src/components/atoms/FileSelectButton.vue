@@ -7,7 +7,7 @@ type Props = {
 }
 
 withDefaults(defineProps<Props>(), {
-  label: 'Wybierz plik'
+  label: 'Wybierz plik',
 })
 
 const emit = defineEmits<{
@@ -27,18 +27,13 @@ function handleFileChange(event: Event) {
 }
 
 defineExpose({
-  triggerFileInput
+  triggerFileInput,
 })
 </script>
 
 <template>
   <span class="file-select">
-    <input
-      ref="fileInputRef"
-      type="file"
-      class="hidden-file-input"
-      @change="handleFileChange"
-    />
+    <input ref="fileInputRef" type="file" class="hidden-file-input" @change="handleFileChange" />
     <el-button @click="triggerFileInput">{{ label }}</el-button>
     <span v-if="modelValue" class="selected-file-name">{{ modelValue.name }}</span>
   </span>

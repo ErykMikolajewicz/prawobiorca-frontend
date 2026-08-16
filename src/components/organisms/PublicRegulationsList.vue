@@ -46,10 +46,7 @@ const displayedRegulations = computed(() => {
       />
     </div>
 
-    <el-empty
-      v-else
-      description="Brak regulacji publicznych."
-    />
+    <el-empty v-else description="Brak regulacji publicznych." />
   </div>
 </template>
 
@@ -73,7 +70,6 @@ const displayedRegulations = computed(() => {
   display: flex;
   justify-content: flex-start;
 }
-
 
 .files-grid {
   display: grid;

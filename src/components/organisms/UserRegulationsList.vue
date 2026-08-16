@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import UserRegulationCard from '@/components/molecules/UserRegulationCard.vue'
 import RegulationTypeFilter from '@/components/molecules/RegulationTypeFilter.vue'
-import type {regulationRepresentation, regulationType} from "@/types/api/regulations.ts"
+import type { regulationRepresentation, regulationType } from '@/types/api/regulations.ts'
 
 type Props = {
   regulations: Array<regulationRepresentation>
@@ -28,7 +28,6 @@ const emit = defineEmits<{
     </div>
 
     <div v-if="regulations.length" class="files-grid">
-
       <UserRegulationCard
         v-for="regulation in regulations"
         :key="regulation.id"
@@ -37,10 +36,7 @@ const emit = defineEmits<{
       />
     </div>
 
-    <el-empty
-      v-else
-      description="Brak regulacji użytkownika."
-    />
+    <el-empty v-else description="Brak regulacji użytkownika." />
   </div>
 </template>
 
@@ -64,7 +60,6 @@ const emit = defineEmits<{
   display: flex;
   justify-content: flex-start;
 }
-
 
 .files-grid {
   display: grid;

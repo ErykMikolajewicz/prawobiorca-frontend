@@ -2,14 +2,14 @@
 import { computed } from 'vue'
 
 type Props = {
-  message: string;
-  type: 'info' | 'error';
+  message: string
+  type: 'info' | 'error'
 }
 
 const props = defineProps<Props>()
 
 const title = computed(() => {
-  return props.type === 'info' ? 'Info': 'Błąd'
+  return props.type === 'info' ? 'Info' : 'Błąd'
 })
 </script>
 

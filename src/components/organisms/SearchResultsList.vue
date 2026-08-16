@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import SearchResultItem from '@/components/molecules/SearchResultItem.vue'
-import type {searchResult} from '@/types/api/search.ts'
+import type { searchResult } from '@/types/api/search.ts'
 
 const props = defineProps<{
   results: Array<searchResult>
@@ -45,11 +45,7 @@ const groupedResults = computed<Array<ResultGroup>>(() => {
 
     <div v-if="results.length">
       <h2>Wyniki:</h2>
-      <div
-        v-for="(group, groupIndex) in groupedResults"
-        :key="groupIndex"
-        class="result-group"
-      >
+      <div v-for="(group, groupIndex) in groupedResults" :key="groupIndex" class="result-group">
         <h3 class="result-group-header">{{ group.header }}</h3>
         <SearchResultItem
           v-for="{ id, text, score } in group.items"

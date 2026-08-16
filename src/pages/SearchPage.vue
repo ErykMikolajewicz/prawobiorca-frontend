@@ -14,9 +14,9 @@ import SearchResultsList from '@/components/organisms/SearchResultsList.vue'
 import { useAuthStore } from '@/stores/auth'
 import { getCases } from '@/api/cases'
 import type { caseData } from '@/types/api/cases'
-import {addDocumentToCase} from "@/api/documents.ts"
-import type {searchResult, searchParams} from "@/types/api/search.ts"
-import {searchRegulation, searchUserRegulation} from "@/api/regulations.ts"
+import { addDocumentToCase } from '@/api/documents.ts'
+import type { searchResult, searchParams } from '@/types/api/search.ts'
+import { searchRegulation, searchUserRegulation } from '@/api/regulations.ts'
 
 const route = useRoute()
 const router = useRouter()
@@ -25,9 +25,11 @@ const { isUserLogged } = storeToRefs(authStore)
 
 const regulationId = ref((route.params.regulationId as string) || '')
 const regulationName = history.state.filename
-const searchParams = ref<searchParams>({query: (route.query.query as string) || '',
+const searchParams = ref<searchParams>({
+  query: (route.query.query as string) || '',
   threshold: route.query.threshold !== undefined ? Number(route.query.threshold) : 0.2,
-  limit: route.query.limit ? Number(route.query.limit) : undefined})
+  limit: route.query.limit ? Number(route.query.limit) : undefined,
+})
 
 const cases = ref<Array<caseData>>([])
 const selectedCaseId = ref<string>('')
@@ -38,14 +40,13 @@ onBeforeMount(async () => {
   if (isUserLogged.value) {
     cases.value = await getCases()
   }
-
 })
 
 const handleSearch = async (newSearchParams: searchParams) => {
   searchParams.value = newSearchParams
 
   await router.replace({
-    query: newSearchParams
+    query: newSearchParams,
   })
 
   await performSearch(newSearchParams)
@@ -57,10 +58,9 @@ async function performSearch(searchParams: searchParams) {
   const isUserFile = route.path.includes('/user/regulations')
   try {
     if (isUserFile) {
-      results.value =  await searchUserRegulation(searchParams, regulationId.value)
-    }
-    else {
-      results.value =  await searchRegulation(searchParams, regulationId.value)
+      results.value = await searchUserRegulation(searchParams, regulationId.value)
+    } else {
+      results.value = await searchRegulation(searchParams, regulationId.value)
     }
   } catch (error) {
     ElMessage.error('Wystąpił błąd podczas przeszukiwania regulacji.')
@@ -70,7 +70,7 @@ async function performSearch(searchParams: searchParams) {
   }
 }
 
-async function handleAddToCase(payload: { documentContent: string }){
+async function handleAddToCase(payload: { documentContent: string }) {
   if (!selectedCaseId.value) {
     ElMessage.warning('Wybierz sprawę z listy.')
     return
@@ -95,18 +95,12 @@ async function handleAddToCase(payload: { documentContent: string }){
         <el-icon><ArrowLeft /></el-icon> Powrót do głównego ekranu
       </el-button>
 
-      <CaseSelector
-        :cases="cases"
-        v-model:selectedCaseId="selectedCaseId"
-      />
+      <CaseSelector :cases="cases" v-model:selectedCaseId="selectedCaseId" />
 
-    <h1>Przeszukaj regulacje: {{ regulationName }}</h1>
+      <h1>Przeszukaj regulacje: {{ regulationName }}</h1>
 
       <div v-loading="isSearching">
-        <SearchForm
-          :search-params="searchParams"
-          @search="handleSearch"
-        />
+        <SearchForm :search-params="searchParams" @search="handleSearch" />
 
         <SearchResultsList
           :results="results"
@@ -117,7 +111,7 @@ async function handleAddToCase(payload: { documentContent: string }){
       </div>
     </main>
 
-  <AppFooter />
+    <AppFooter />
   </div>
 </template>
 

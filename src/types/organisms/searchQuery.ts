@@ -1,5 +1,5 @@
 export type SearchConfig = {
-  query: string,
-  threshold: number,
+  query: string
+  threshold: number
   limit?: number
 }

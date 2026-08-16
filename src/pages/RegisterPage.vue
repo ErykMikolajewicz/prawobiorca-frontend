@@ -7,7 +7,7 @@ import RegisterForm from '@/components/organisms/RegisterForm.vue'
     <div class="register-container">
       <h2 class="title">Rejestracja</h2>
 
-    <RegisterForm />
+      <RegisterForm />
 
       <p class="login-link">
         <router-link to="/auth/login" custom v-slot="{ navigate, href }">

@@ -28,7 +28,7 @@ watch(
   () => props.regulation.isPrepared,
   (newVal) => {
     isPrepared.value = newVal
-  }
+  },
 )
 
 async function handleDelete() {
@@ -66,7 +66,7 @@ async function prepareRegulation(regulationId: string) {
         ? {
             name: 'SearchPublicRegulation',
             params: { regulationId: regulation.id },
-            state: { filename: regulation.presentationName }
+            state: { filename: regulation.presentationName },
           }
         : undefined
     "
@@ -105,11 +105,7 @@ async function prepareRegulation(regulationId: string) {
             @confirm="handleDelete"
           >
             <template #reference>
-              <button
-                class="icon-btn icon-btn-danger"
-                :disabled="isDeleting"
-                @click.prevent.stop
-              >
+              <button class="icon-btn icon-btn-danger" :disabled="isDeleting" @click.prevent.stop>
                 <DeleteOutlineRoundedIcon />
               </button>
             </template>

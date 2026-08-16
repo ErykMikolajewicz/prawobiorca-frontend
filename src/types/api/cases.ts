@@ -1,4 +1,1 @@
-
-export type caseData = {id: string,
-    name: string}
-
+export type caseData = { id: string; name: string }

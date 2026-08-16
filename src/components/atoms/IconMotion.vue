@@ -1,11 +1,10 @@
 <script setup lang="ts">
-
 interface Props {
   motionType?: 'search' | 'arrow'
 }
 
 withDefaults(defineProps<Props>(), {
-  motionType: 'arrow'
+  motionType: 'arrow',
 })
 </script>
 
@@ -59,5 +58,4 @@ withDefaults(defineProps<Props>(), {
   width: 1.5em;
   height: 1.5em;
 }
-
 </style>

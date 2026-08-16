@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import MainPage from '@/pages/MainPage.vue'
-import LoginPage from "@/pages/LoginPage.vue"
-import RegisterPage from "@/pages/RegisterPage.vue"
-import SearchPage from "@/pages/SearchPage.vue"
-import CasePage from "@/pages/CasePage.vue"
+import LoginPage from '@/pages/LoginPage.vue'
+import RegisterPage from '@/pages/RegisterPage.vue'
+import SearchPage from '@/pages/SearchPage.vue'
+import CasePage from '@/pages/CasePage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.PRAWOBIORCA_API_URL),
@@ -11,33 +11,33 @@ const router = createRouter({
     {
       path: '/',
       name: 'MainPage',
-      component: MainPage
+      component: MainPage,
     },
     {
       path: '/regulations/:regulationId/documents',
       name: 'SearchPublicRegulation',
-      component: SearchPage
+      component: SearchPage,
     },
     {
       path: '/user/regulations/:regulationId/documents',
       name: 'SearchUserRegulation',
-      component: SearchPage
+      component: SearchPage,
     },
     {
       path: '/auth/login',
       name: 'LoginPage',
-      component: LoginPage
+      component: LoginPage,
     },
     {
       path: '/accounts/register',
       name: 'RegisterPage',
-      component: RegisterPage
+      component: RegisterPage,
     },
     {
       path: '/user/cases/:id',
       name: 'CasePage',
-      component: CasePage
-    }
+      component: CasePage,
+    },
   ],
 })
 

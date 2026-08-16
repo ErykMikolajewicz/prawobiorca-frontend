@@ -7,8 +7,7 @@ import DeleteOutlineRoundedIcon from '@iconify-vue/material-symbols/delete-outli
 import SettingsIcon from '@iconify-vue/material-symbols/settings-rounded'
 import IconMotion from '@/components/atoms/IconMotion.vue'
 import RegulationTypeBadge from '@/components/atoms/RegulationTypeBadge.vue'
-import type { regulationRepresentation } from "@/types/api/regulations.ts"
-
+import type { regulationRepresentation } from '@/types/api/regulations.ts'
 
 type Props = {
   regulation: regulationRepresentation
@@ -28,7 +27,7 @@ watch(
   () => props.regulation.isPrepared,
   (newVal) => {
     isPrepared.value = newVal
-  }
+  },
 )
 
 async function handleDelete() {
@@ -66,7 +65,7 @@ async function prepareRegulation(regulationId: string) {
         ? {
             name: 'SearchUserRegulation',
             params: { regulationId: regulation.id },
-            state: { filename: regulation.presentationName }
+            state: { filename: regulation.presentationName },
           }
         : undefined
     "
@@ -82,18 +81,13 @@ async function prepareRegulation(regulationId: string) {
         </div>
 
         <div class="actions">
-
           <span v-if="isPrepared">
             <IconMotion motion-type="search">
               <SearchRoundedIcon />
             </IconMotion>
           </span>
 
-          <form
-            v-else
-            class="form-action"
-            @submit.prevent="prepareRegulation(regulation.id)"
-          >
+          <form v-else class="form-action" @submit.prevent="prepareRegulation(regulation.id)">
             <button class="icon-btn" type="submit">
               <SettingsIcon />
             </button>
@@ -126,11 +120,9 @@ async function prepareRegulation(regulationId: string) {
   height: 100%;
 }
 
-
 .file-card:hover {
   box-shadow: var(--app-card-shadow);
 }
-
 
 .card-content {
   display: flex;
@@ -139,7 +131,6 @@ async function prepareRegulation(regulationId: string) {
   gap: 16px;
   margin-top: 18px;
 }
-
 
 .regulation-info {
   flex: 1;
@@ -159,8 +150,6 @@ async function prepareRegulation(regulationId: string) {
   z-index: 1;
 }
 
-
-
 .file-card-link {
   display: block;
   color: inherit;
@@ -171,7 +160,6 @@ async function prepareRegulation(regulationId: string) {
   .file-card {
     box-shadow: var(--app-card-shadow);
   }
-
 
   :deep(.icon-btn) {
     color: var(--el-color-primary);

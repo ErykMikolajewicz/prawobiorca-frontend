@@ -5,9 +5,7 @@ import DarkModeToggle from '@/components/molecules/DarkModeToggle.vue'
 
 <template>
   <el-header class="app-navbar">
-    <div class="logo">
-      PRAWOBIORCA
-    </div>
+    <div class="logo">PRAWOBIORCA</div>
 
     <div class="nav-controls">
       <DarkModeToggle />
@@ -32,7 +30,6 @@ import DarkModeToggle from '@/components/molecules/DarkModeToggle.vue'
   gap: 8px;
 }
 
-
 .logo {
   color: var(--el-color-primary);
   font-size: 20px;
@@ -40,4 +37,3 @@ import DarkModeToggle from '@/components/molecules/DarkModeToggle.vue'
   letter-spacing: 1px;
 }
 </style>
-

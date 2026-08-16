@@ -4,16 +4,16 @@ import type {
   regulationData,
   regulationRepresentation,
   regulationType,
-  regulationUploadTarget
+  regulationUploadTarget,
 } from '@/types/api/regulations.ts'
 import type { searchParams, searchResult } from '@/types/api/search.ts'
 
 export async function getPublicRegulations(
-  regulationType?: regulationType
+  regulationType?: regulationType,
 ): Promise<Array<regulationRepresentation>> {
   try {
     const response = await prawobiorcaClient.get('/regulations', {
-      params: regulationType ? { documentType: regulationType } : undefined
+      params: regulationType ? { documentType: regulationType } : undefined,
     })
 
     if (response.status === 204) {
@@ -31,11 +31,11 @@ export async function getPublicRegulations(
 }
 
 export async function getUserRegulations(
-  regulationType?: regulationType
+  regulationType?: regulationType,
 ): Promise<Array<regulationRepresentation>> {
   try {
     const response = await prawobiorcaClient.get('/user/regulations', {
-      params: regulationType ? { documentType: regulationType } : undefined
+      params: regulationType ? { documentType: regulationType } : undefined,
     })
 
     if (response.status === 204) {
@@ -53,22 +53,20 @@ export async function getUserRegulations(
 }
 
 export async function createPublicRegulation(
-  data: regulationData
+  data: regulationData,
 ): Promise<regulationUploadTarget> {
   const response = await prawobiorcaClient.post('/regulations', data)
   return response.data
 }
 
-export async function createUserRegulation(
-  data: regulationData
-): Promise<regulationUploadTarget> {
+export async function createUserRegulation(data: regulationData): Promise<regulationUploadTarget> {
   const response = await prawobiorcaClient.post('/user/regulations', data)
   return response.data
 }
 
 export async function uploadFileToStorage(
   target: regulationUploadTarget,
-  file: File
+  file: File,
 ): Promise<void> {
   const formData = new FormData()
   for (const [key, value] of Object.entries(target.fields)) {
@@ -76,7 +74,12 @@ export async function uploadFileToStorage(
   }
   formData.append('file', file)
 
-  await axios.post(target.url, formData)
+  let uploadUrl = target.url
+  if (import.meta.env.DEV && uploadUrl.includes('localhost:9000')) {
+    uploadUrl = uploadUrl.replace(/^https?:\/\/localhost:9000/, '/storage')
+  }
+
+  await axios.post(uploadUrl, formData)
 }
 
 export async function confirmPublicRegulationUpload(regulationId: string): Promise<void> {
@@ -89,23 +92,31 @@ export async function confirmUserRegulationUpload(regulationId: string): Promise
 
 export async function getPublicRegulationDownloadUrl(regulationId: string): Promise<string> {
   const response = await prawobiorcaClient.get(`/regulations/${regulationId}/download-url`)
-  return response.data
+  const url = response.data
+  if (import.meta.env.DEV && typeof url === 'string' && url.includes('localhost:9000')) {
+    return url.replace(/^https?:\/\/localhost:9000/, '/storage')
+  }
+  return url
 }
 
 export async function getUserRegulationDownloadUrl(regulationId: string): Promise<string> {
   const response = await prawobiorcaClient.get(`/user/regulations/${regulationId}/download-url`)
-  return response.data
+  const url = response.data
+  if (import.meta.env.DEV && typeof url === 'string' && url.includes('localhost:9000')) {
+    return url.replace(/^https?:\/\/localhost:9000/, '/storage')
+  }
+  return url
 }
 
 export async function uploadUserRegulation(
   regulation: File,
   presentationName: string,
-  regulationType?: regulationType
+  regulationType?: regulationType,
 ): Promise<string> {
   try {
     const uploadTarget = await createUserRegulation({
       name: presentationName,
-      regulation_type: regulationType || null
+      regulation_type: regulationType || null,
     })
 
     await uploadFileToStorage(uploadTarget, regulation)
@@ -121,12 +132,12 @@ export async function uploadUserRegulation(
 export async function uploadPublicRegulation(
   regulation: File,
   presentationName: string,
-  regulationType?: regulationType
+  regulationType?: regulationType,
 ): Promise<string> {
   try {
     const uploadTarget = await createPublicRegulation({
       name: presentationName,
-      regulation_type: regulationType || null
+      regulation_type: regulationType || null,
     })
 
     await uploadFileToStorage(uploadTarget, regulation)
@@ -157,10 +168,10 @@ export async function preparePublicRegulation(regulationId: string): Promise<voi
 
 export async function searchRegulation(
   searchParams: searchParams,
-  regulationId: string
+  regulationId: string,
 ): Promise<Array<searchResult>> {
   const response = await prawobiorcaClient.get(`/regulations/${regulationId}/documents`, {
-    params: { ...searchParams }
+    params: { ...searchParams },
   })
 
   if (response.status === 204) {
@@ -171,10 +182,10 @@ export async function searchRegulation(
 
 export async function searchUserRegulation(
   searchParams: searchParams,
-  regulationId: string
+  regulationId: string,
 ): Promise<Array<searchResult>> {
   const response = await prawobiorcaClient.get(`/user/regulations/${regulationId}/documents`, {
-    params: { ...searchParams }
+    params: { ...searchParams },
   })
 
   if (response.status === 204) {
@@ -182,4 +193,3 @@ export async function searchUserRegulation(
   }
   return response.data
 }
-

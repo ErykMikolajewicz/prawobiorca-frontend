@@ -1,6 +1,6 @@
 import axios from 'axios'
 
 export const prawobiorcaClient = axios.create({
-  baseURL: import.meta.env.VITE_PRAWOBIORCA_API_URL
+  baseURL: import.meta.env.VITE_PRAWOBIORCA_API_URL || '/api',
 })
 prawobiorcaClient.defaults.withCredentials = true

@@ -9,7 +9,7 @@ const router = useRouter()
 
 const form = reactive({
   username: '',
-  password: ''
+  password: '',
 })
 
 const errorMessage = ref('')
@@ -29,13 +29,13 @@ const onSubmit = async () => {
 
     ElMessage({
       message: 'Rejestracja przebiegła pomyślnie. Możesz się teraz zalogować.',
-      type: 'success'
+      type: 'success',
     })
 
     await router.push('/auth/login')
   } catch (error: unknown) {
     errorMessage.value = getApiErrorMessage(error, {
-      conflictMessage: 'Nazwa użytkownika jest już zajęta.'
+      conflictMessage: 'Nazwa użytkownika jest już zajęta.',
     })
   } finally {
     isLoading.value = false
