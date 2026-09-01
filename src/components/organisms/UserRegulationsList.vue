@@ -12,6 +12,7 @@ defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'user-regulation-deleted', regulationId: string): void
+  (e: 'user-regulation-preparation-retried', regulationId: string): void
   (e: 'update:typeFilter', value: regulationType | undefined): void
 }>()
 </script>
@@ -33,6 +34,9 @@ const emit = defineEmits<{
         :key="regulation.id"
         :regulation="regulation"
         @deleted="(regulationId) => emit('user-regulation-deleted', regulationId)"
+        @preparation-retried="
+          (regulationId) => emit('user-regulation-preparation-retried', regulationId)
+        "
       />
     </div>
 

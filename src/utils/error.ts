@@ -18,7 +18,7 @@ export function getApiErrorMessage(
     return 'Wystąpił błąd. Spróbuj ponownie.'
   }
 
-  const axiosErr = error as AxiosError<unknown>
+  const axiosErr = error as AxiosError
 
   if (axiosErr.response) {
     const status = axiosErr.response.status

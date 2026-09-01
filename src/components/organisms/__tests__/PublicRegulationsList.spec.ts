@@ -5,12 +5,22 @@ import type { regulationRepresentation } from '@/types/api/regulations'
 
 vi.mock('@/api/regulations', () => ({
   deletePublicRegulation: vi.fn(),
-  preparePublicRegulation: vi.fn(),
+  retryPublicRegulationPreparation: vi.fn(),
 }))
 
 const mockRegulations: regulationRepresentation[] = [
-  { id: '1', presentationName: 'Prepared Doc', isPrepared: true, regulationType: 'ACT' },
-  { id: '2', presentationName: 'Unprepared Doc', isPrepared: false, regulationType: 'STATUTE' },
+  {
+    id: '1',
+    presentationName: 'Prepared Doc',
+    preparationStatus: 'PREPARED',
+    regulationType: 'ACT',
+  },
+  {
+    id: '2',
+    presentationName: 'Unprepared Doc',
+    preparationStatus: 'IN_PROGRESS',
+    regulationType: 'STATUTE',
+  },
 ]
 
 describe('PublicRegulationsList', () => {
@@ -70,7 +80,7 @@ describe('PublicRegulationsList', () => {
           {
             id: '2',
             presentationName: 'Unprepared Doc',
-            isPrepared: false,
+            preparationStatus: 'IN_PROGRESS',
             regulationType: 'STATUTE',
           },
         ],

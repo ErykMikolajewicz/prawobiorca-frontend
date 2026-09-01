@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import { deletePublicRegulation, preparePublicRegulation } from '@/api/regulations'
+import { computed, ref } from 'vue'
+import { deletePublicRegulation, retryPublicRegulationPreparation } from '@/api/regulations'
 import { ElMessage } from 'element-plus'
 import type { regulationRepresentation } from '@/types/api/regulations.ts'
 import SearchRoundedIcon from '@iconify-vue/material-symbols/search-rounded'
 import DeleteOutlineRoundedIcon from '@iconify-vue/material-symbols/delete-outline-rounded'
-import SettingsIcon from '@iconify-vue/material-symbols/settings-rounded'
+import RefreshRoundedIcon from '@iconify-vue/material-symbols/refresh-rounded'
 import IconMotion from '@/components/atoms/IconMotion.vue'
 import RegulationTypeBadge from '@/components/atoms/RegulationTypeBadge.vue'
+import RegulationStatusBadge from '@/components/atoms/RegulationStatusBadge.vue'
+import { useRegulationPreparation } from '@/composables/useRegulationPreparation'
 
 type Props = {
   regulation: regulationRepresentation
@@ -18,18 +20,14 @@ const props = defineProps<Props>()
 
 const emit = defineEmits<{
   (e: 'deleted', regulationId: string): void
-  (e: 'prepared', regulationId: string): void
+  (e: 'preparation-retried', regulationId: string): void
 }>()
 
 const isDeleting = ref(false)
-const isPrepared = ref(props.regulation.isPrepared)
+const isPrepared = computed(() => props.regulation.preparationStatus === 'PREPARED')
+const hasFailed = computed(() => props.regulation.preparationStatus === 'FAILED')
 
-watch(
-  () => props.regulation.isPrepared,
-  (newVal) => {
-    isPrepared.value = newVal
-  },
-)
+const { isRetrying, retry } = useRegulationPreparation(retryPublicRegulationPreparation)
 
 async function handleDelete() {
   try {
@@ -45,15 +43,9 @@ async function handleDelete() {
   }
 }
 
-async function prepareRegulation(regulationId: string) {
-  try {
-    await preparePublicRegulation(regulationId)
-    isPrepared.value = true
-    ElMessage.success('Regulacja została przygotowana')
-    emit('prepared', regulationId)
-  } catch (error) {
-    ElMessage.error('Nie udało się przygotować regulacji')
-    console.error('Nie udało się przygotować regulacji', error)
+async function retryPreparation(regulationId: string) {
+  if (await retry(regulationId)) {
+    emit('preparation-retried', regulationId)
   }
 }
 </script>
@@ -87,15 +79,19 @@ async function prepareRegulation(regulationId: string) {
             </IconMotion>
           </span>
 
-          <form
-            v-else-if="isAdmin"
-            class="form-action"
-            @submit.prevent="prepareRegulation(regulation.id)"
-          >
-            <button class="icon-btn" type="submit">
-              <SettingsIcon />
-            </button>
-          </form>
+          <template v-else-if="isAdmin">
+            <RegulationStatusBadge :preparation-status="regulation.preparationStatus" />
+
+            <form
+              v-if="hasFailed"
+              class="form-action"
+              @submit.prevent="retryPreparation(regulation.id)"
+            >
+              <button class="icon-btn" type="submit" :disabled="isRetrying">
+                <RefreshRoundedIcon />
+              </button>
+            </form>
+          </template>
 
           <el-popconfirm
             v-if="isAdmin"
