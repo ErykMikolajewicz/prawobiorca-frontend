@@ -51,21 +51,24 @@ export function useRegulationUpload() {
       const regulationTypeValue = selectedRegulationType.value || undefined
       const uploadFn = target.value === 'public' ? uploadPublicRegulation : uploadUserRegulation
 
-      const regulationId = await uploadFn(
+      const uploadResult = await uploadFn(
         selectedFile.value,
         presentationName.value.trim(),
         regulationTypeValue,
       )
 
-      ElMessage.success('Plik został pomyślnie dodany.')
+      if (uploadResult.preparationStatus === 'IN_PROGRESS') {
+        ElMessage.success('Plik został dodany i jest przetwarzany.')
+      } else {
+        ElMessage.warning('Plik został wgrany, ale nie udało się rozpocząć przetwarzania.')
+      }
 
       return {
         regulation: {
-          id: regulationId,
+          id: uploadResult.id,
           presentationName: presentationName.value.trim(),
-          isPrepared: false,
-          isUploaded: true,
           regulationType: regulationTypeValue,
+          preparationStatus: uploadResult.preparationStatus,
         },
         target: target.value,
       }

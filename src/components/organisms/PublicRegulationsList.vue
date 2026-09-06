@@ -15,13 +15,14 @@ const props = defineProps<Props>()
 const emit = defineEmits<{
   (e: 'update:typeFilter', value: regulationType | undefined): void
   (e: 'regulation-deleted', regulationId: string): void
+  (e: 'regulation-preparation-retried', regulationId: string): void
 }>()
 
 const displayedRegulations = computed(() => {
   if (props.isAdmin) {
     return props.regulations
   }
-  return props.regulations.filter((regulation) => regulation.isPrepared)
+  return props.regulations.filter((regulation) => regulation.preparationStatus === 'PREPARED')
 })
 </script>
 
@@ -43,6 +44,9 @@ const displayedRegulations = computed(() => {
         :regulation="regulation"
         :is-admin="isAdmin"
         @deleted="(regulationId) => emit('regulation-deleted', regulationId)"
+        @preparation-retried="
+          (regulationId) => emit('regulation-preparation-retried', regulationId)
+        "
       />
     </div>
 

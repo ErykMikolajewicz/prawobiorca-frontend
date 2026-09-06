@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onBeforeMount, watch } from 'vue'
+import { computed, ref, onBeforeMount, watch } from 'vue'
 
 import { storeToRefs } from 'pinia'
 
@@ -10,6 +10,7 @@ import UserRegulationsList from '@/components/organisms/UserRegulationsList.vue'
 import UserCasesList from '@/components/organisms/UserCasesList.vue'
 import RegulationUploadDialog from '@/components/molecules/RegulationUploadDialog.vue'
 import { getPublicRegulations, getUserRegulations } from '@/api/regulations.ts'
+import { useRegulationsPolling } from '@/composables/useRegulationsPolling'
 
 import type { regulationRepresentation, regulationType } from '@/types/api/regulations.ts'
 import { getCases } from '@/api/cases.ts'
@@ -55,6 +56,21 @@ function handlePublicRegulationDeleted(regulationId: string) {
   )
 }
 
+function handleUserRegulationPreparationRetried(regulationId: string) {
+  markAsInProgress(userRegulations.value, regulationId)
+}
+
+function handlePublicRegulationPreparationRetried(regulationId: string) {
+  markAsInProgress(publicRegulations.value, regulationId)
+}
+
+function markAsInProgress(regulations: Array<regulationRepresentation>, regulationId: string) {
+  const regulation = regulations.find((item) => item.id === regulationId)
+  if (regulation) {
+    regulation.preparationStatus = 'IN_PROGRESS'
+  }
+}
+
 function handleCaseDeleted(caseId: string) {
   cases.value = cases.value.filter((c) => c.id !== caseId)
 }
@@ -79,6 +95,29 @@ async function fetchUserRegulations() {
 
 watch(publicRegulationTypeFilter, fetchPublicRegulations)
 watch(userRegulationTypeFilter, fetchUserRegulations)
+
+function isPending(regulation: regulationRepresentation): boolean {
+  return (
+    regulation.preparationStatus === 'NOT_STARTED' || regulation.preparationStatus === 'IN_PROGRESS'
+  )
+}
+
+const hasPendingRegulations = computed(() => {
+  if (isUserLogged.value && userRegulations.value.some(isPending)) {
+    return true
+  }
+  return isAdmin.value && publicRegulations.value.some(isPending)
+})
+
+async function refreshRegulations() {
+  await fetchPublicRegulations()
+
+  if (isUserLogged.value) {
+    await fetchUserRegulations()
+  }
+}
+
+useRegulationsPolling(() => hasPendingRegulations.value, refreshRegulations)
 
 onBeforeMount(async () => {
   await fetchPublicRegulations()
@@ -110,6 +149,7 @@ onBeforeMount(async () => {
         :is-admin="isAdmin"
         @update:type-filter="(value) => (publicRegulationTypeFilter = value)"
         @regulation-deleted="handlePublicRegulationDeleted"
+        @regulation-preparation-retried="handlePublicRegulationPreparationRetried"
       />
 
       <el-divider />
@@ -120,6 +160,7 @@ onBeforeMount(async () => {
           :type-filter="userRegulationTypeFilter"
           @update:type-filter="(value) => (userRegulationTypeFilter = value)"
           @user-regulation-deleted="handleUserRegulationDeleted"
+          @user-regulation-preparation-retried="handleUserRegulationPreparationRetried"
         />
 
         <el-divider />

@@ -11,26 +11,13 @@ export async function logout(): Promise<void> {
 
 export async function login(username: string, password: string): Promise<void> {
   const params = new URLSearchParams()
+  params.append('grant_type', 'password')
   params.append('username', username)
   params.append('password', password)
 
   await prawobiorcaClient.post('/auth/login', params, {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
   })
-}
-
-export async function isLogged(): Promise<boolean> {
-  try {
-    await prawobiorcaClient.get('/auth/me')
-    return true
-  } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      if (error.response?.status === 401) {
-        return false
-      }
-    }
-    throw error
-  }
 }
 
 export async function getCurrentUser(): Promise<currentUser | null> {

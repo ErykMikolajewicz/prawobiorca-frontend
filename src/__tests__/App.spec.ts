@@ -10,7 +10,7 @@ describe('App', () => {
       routes: [{ path: '/', component: { template: '<div>Home</div>' } }],
     })
 
-    router.push('/')
+    await router.push('/')
     await router.isReady()
 
     const wrapper = mount(App, {

@@ -4,9 +4,17 @@ import type {
   regulationData,
   regulationRepresentation,
   regulationType,
+  regulationUploadResult,
   regulationUploadTarget,
 } from '@/types/api/regulations.ts'
 import type { searchParams, searchResult } from '@/types/api/search.ts'
+
+function normalizeRegulation(regulation: regulationRepresentation): regulationRepresentation {
+  return {
+    ...regulation,
+    preparationStatus: regulation.preparationStatus ?? 'NOT_STARTED',
+  }
+}
 
 export async function getPublicRegulations(
   regulationType?: regulationType,
@@ -20,7 +28,7 @@ export async function getPublicRegulations(
       return []
     }
     if (Array.isArray(response.data)) {
-      return response.data
+      return response.data.map(normalizeRegulation)
     }
     console.error('Invalid response format for public files:', response.data)
     return []
@@ -42,7 +50,7 @@ export async function getUserRegulations(
       return []
     }
     if (Array.isArray(response.data)) {
-      return response.data
+      return response.data.map(normalizeRegulation)
     }
     console.error('Invalid response format for user regulations:', response.data)
     return []
@@ -108,11 +116,24 @@ export async function getUserRegulationDownloadUrl(regulationId: string): Promis
   return url
 }
 
+async function confirmUpload(
+  regulationId: string,
+  confirm: (regulationId: string) => Promise<void>,
+): Promise<regulationUploadResult> {
+  try {
+    await confirm(regulationId)
+    return { id: regulationId, preparationStatus: 'IN_PROGRESS' }
+  } catch (error) {
+    console.error('Failed to confirm regulation upload:', error)
+    return { id: regulationId, preparationStatus: 'NOT_STARTED' }
+  }
+}
+
 export async function uploadUserRegulation(
   regulation: File,
   presentationName: string,
   regulationType?: regulationType,
-): Promise<string> {
+): Promise<regulationUploadResult> {
   try {
     const uploadTarget = await createUserRegulation({
       name: presentationName,
@@ -120,9 +141,8 @@ export async function uploadUserRegulation(
     })
 
     await uploadFileToStorage(uploadTarget, regulation)
-    await confirmUserRegulationUpload(uploadTarget.id)
 
-    return uploadTarget.id
+    return await confirmUpload(uploadTarget.id, confirmUserRegulationUpload)
   } catch (error) {
     console.error('Failed to upload user regulation:', error)
     throw error
@@ -133,7 +153,7 @@ export async function uploadPublicRegulation(
   regulation: File,
   presentationName: string,
   regulationType?: regulationType,
-): Promise<string> {
+): Promise<regulationUploadResult> {
   try {
     const uploadTarget = await createPublicRegulation({
       name: presentationName,
@@ -141,9 +161,8 @@ export async function uploadPublicRegulation(
     })
 
     await uploadFileToStorage(uploadTarget, regulation)
-    await confirmPublicRegulationUpload(uploadTarget.id)
 
-    return uploadTarget.id
+    return await confirmUpload(uploadTarget.id, confirmPublicRegulationUpload)
   } catch (error) {
     console.error('Failed to upload public regulation:', error)
     throw error
@@ -158,12 +177,12 @@ export async function deletePublicRegulation(regulationId: string): Promise<void
   await prawobiorcaClient.delete(`/regulations/${regulationId}`)
 }
 
-export async function prepareUserRegulation(regulationId: string): Promise<void> {
-  await prawobiorcaClient.post(`/user/regulations/${regulationId}/preparation`)
+export async function retryUserRegulationPreparation(regulationId: string): Promise<void> {
+  await prawobiorcaClient.post(`/user/regulations/${regulationId}/preparation-retry`)
 }
 
-export async function preparePublicRegulation(regulationId: string): Promise<void> {
-  await prawobiorcaClient.post(`/regulations/${regulationId}/preparation`)
+export async function retryPublicRegulationPreparation(regulationId: string): Promise<void> {
+  await prawobiorcaClient.post(`/regulations/${regulationId}/preparation-retry`)
 }
 
 export async function searchRegulation(

@@ -1,11 +1,12 @@
 export type regulationType = 'ACT' | 'DECREE' | 'STATUTE'
 
+export type regulationPreparationStatus = 'NOT_STARTED' | 'IN_PROGRESS' | 'PREPARED' | 'FAILED'
+
 export type regulationRepresentation = {
   id: string
   presentationName: string
-  isPrepared: boolean
-  isUploaded?: boolean
   regulationType?: regulationType | null
+  preparationStatus: regulationPreparationStatus
 }
 
 export type regulationData = {
@@ -17,4 +18,9 @@ export type regulationUploadTarget = {
   id: string
   url: string
   fields: Record<string, string>
+}
+
+export type regulationUploadResult = {
+  id: string
+  preparationStatus: regulationPreparationStatus
 }

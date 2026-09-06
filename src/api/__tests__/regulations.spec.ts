@@ -4,8 +4,8 @@ import { prawobiorcaClient } from '@/api/axios'
 import {
   uploadUserRegulation,
   uploadPublicRegulation,
-  prepareUserRegulation,
-  preparePublicRegulation,
+  retryUserRegulationPreparation,
+  retryPublicRegulationPreparation,
   createUserRegulation,
   createPublicRegulation,
   uploadFileToStorage,
@@ -141,9 +141,9 @@ describe('regulations API', () => {
     vi.mocked(axios.post).mockResolvedValueOnce({ status: 200 })
 
     const file = new File(['dummy'], 'user_doc.pdf', { type: 'application/pdf' })
-    const id = await uploadUserRegulation(file, 'User Doc', 'STATUTE')
+    const result = await uploadUserRegulation(file, 'User Doc', 'STATUTE')
 
-    expect(id).toBe('uuid-user-1')
+    expect(result).toEqual({ id: 'uuid-user-1', preparationStatus: 'IN_PROGRESS' })
     expect(prawobiorcaClient.post).toHaveBeenNthCalledWith(1, '/user/regulations', {
       name: 'User Doc',
       regulation_type: 'STATUTE',
@@ -168,9 +168,9 @@ describe('regulations API', () => {
     vi.mocked(axios.post).mockResolvedValueOnce({ status: 200 })
 
     const file = new File(['dummy'], 'pub_doc.pdf', { type: 'application/pdf' })
-    const id = await uploadPublicRegulation(file, 'Public Doc', 'ACT')
+    const result = await uploadPublicRegulation(file, 'Public Doc', 'ACT')
 
-    expect(id).toBe('uuid-pub-1')
+    expect(result).toEqual({ id: 'uuid-pub-1', preparationStatus: 'IN_PROGRESS' })
     expect(prawobiorcaClient.post).toHaveBeenNthCalledWith(1, '/regulations', {
       name: 'Public Doc',
       regulation_type: 'ACT',
@@ -182,15 +182,35 @@ describe('regulations API', () => {
     )
   })
 
-  it('prepareUserRegulation sends POST to user preparation endpoint', async () => {
-    vi.mocked(prawobiorcaClient.post).mockResolvedValueOnce({ status: 204 })
-    await prepareUserRegulation('uuid-123')
-    expect(prawobiorcaClient.post).toHaveBeenCalledWith('/user/regulations/uuid-123/preparation')
+  it('uploadUserRegulation keeps the uploaded regulation when confirm-upload fails', async () => {
+    vi.mocked(prawobiorcaClient.post)
+      .mockResolvedValueOnce({
+        data: {
+          id: 'uuid-user-2',
+          url: 'https://s3.local/upload',
+          fields: { token: 'xyz' },
+        },
+      })
+      .mockRejectedValueOnce(new Error('Preparation service not working!'))
+    vi.mocked(axios.post).mockResolvedValueOnce({ status: 200 })
+
+    const file = new File(['dummy'], 'user_doc.pdf', { type: 'application/pdf' })
+    const result = await uploadUserRegulation(file, 'User Doc')
+
+    expect(result).toEqual({ id: 'uuid-user-2', preparationStatus: 'NOT_STARTED' })
   })
 
-  it('preparePublicRegulation sends POST to public preparation endpoint', async () => {
-    vi.mocked(prawobiorcaClient.post).mockResolvedValueOnce({ status: 204 })
-    await preparePublicRegulation('uuid-456')
-    expect(prawobiorcaClient.post).toHaveBeenCalledWith('/regulations/uuid-456/preparation')
+  it('retryUserRegulationPreparation sends POST to user preparation retry endpoint', async () => {
+    vi.mocked(prawobiorcaClient.post).mockResolvedValueOnce({ status: 202 })
+    await retryUserRegulationPreparation('uuid-123')
+    expect(prawobiorcaClient.post).toHaveBeenCalledWith(
+      '/user/regulations/uuid-123/preparation-retry',
+    )
+  })
+
+  it('retryPublicRegulationPreparation sends POST to public preparation retry endpoint', async () => {
+    vi.mocked(prawobiorcaClient.post).mockResolvedValueOnce({ status: 202 })
+    await retryPublicRegulationPreparation('uuid-456')
+    expect(prawobiorcaClient.post).toHaveBeenCalledWith('/regulations/uuid-456/preparation-retry')
   })
 })

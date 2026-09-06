@@ -37,9 +37,11 @@ export async function getCaseDocuments(caseId: string): Promise<Array<DocumentDa
 }
 
 export async function addCase(caseName: string): Promise<string> {
-  const formData = new FormData()
-  formData.append('caseName', caseName)
-  const response = await prawobiorcaClient.post('/user/cases', formData)
+  const params = new URLSearchParams()
+  params.append('caseName', caseName)
+  const response = await prawobiorcaClient.post('/user/cases', params, {
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  })
   return response.data
 }
 
