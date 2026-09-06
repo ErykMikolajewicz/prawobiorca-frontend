@@ -8,11 +8,17 @@ export function hasMessage(obj: unknown): obj is { message: string } {
 
 export function getApiErrorMessage(
   error: unknown,
-  options?: { conflictMessage?: string; defaultServerMessage?: string },
+  options?: {
+    conflictMessage?: string
+    defaultServerMessage?: string
+    unauthorizedMessage?: string
+  },
 ): string {
   const defaultServer =
     options?.defaultServerMessage ?? 'Wystąpił błąd po stronie serwera. Spróbuj ponownie później.'
   const conflictMsg = options?.conflictMessage ?? 'Zasób jest już zajęty.'
+  const unauthorizedMsg =
+    options?.unauthorizedMessage ?? 'Nieprawidłowa nazwa użytkownika lub hasło.'
 
   if (!axios.isAxiosError(error)) {
     return 'Wystąpił błąd. Spróbuj ponownie.'
@@ -22,7 +28,7 @@ export function getApiErrorMessage(
 
   if (axiosErr.response) {
     const status = axiosErr.response.status
-    if (status === 401) return 'Nieprawidłowa nazwa użytkownika lub hasło.'
+    if (status === 401) return unauthorizedMsg
     if (status === 409) return conflictMsg
 
     const data = axiosErr.response.data

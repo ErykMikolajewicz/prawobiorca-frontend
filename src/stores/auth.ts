@@ -21,14 +21,18 @@ export const useAuthStore = defineStore('auth', () => {
     isAdmin.value = currentUser?.isAdmin ?? false
   }
 
+  function resetSession(): void {
+    isUserLogged.value = false
+    isAdmin.value = false
+  }
+
   async function logout() {
     try {
       await authApi.logout()
     } finally {
-      isUserLogged.value = false
-      isAdmin.value = false
+      resetSession()
     }
   }
 
-  return { isUserLogged, isAdmin, checkIsLogged, login, logout }
+  return { isUserLogged, isAdmin, checkIsLogged, login, logout, resetSession }
 })
